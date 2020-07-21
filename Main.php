@@ -1012,24 +1012,24 @@ class Main extends CI_Controller {
 	function saveOrderMTR(){
 		/*Получаем данные с формы с помощью Ajax запроса*/
 
-        $order['codeMTR'] = json_decode(stripslashes($this->input->post('codeMTR')));
-		$order['numberPartMTR'] = json_decode(stripslashes($this->input->post('numberPartMTR')));
-		$order['nameMTR'] = json_decode(stripslashes($this->input->post('nameMTR')));
-		$order['ukObjectMTR'] = json_decode(stripslashes($this->input->post('ukObjectMTR')));
-		$order['numberObjectMTR'] = json_decode(stripslashes($this->input->post('numberObjectMTR')));
-		$order['sizeMTR'] = json_decode(stripslashes($this->input->post('sizeMTR')));
-		$order['sumMTR'] = json_decode(stripslashes($this->input->post('sumMTR')));
-		$order['filialMTR'] = json_decode(stripslashes($this->input->post('filialMTR')));
-		$order['deliveryMTR'] = json_decode(stripslashes($this->input->post('deliveryMTR')));
-		$order['noteMTR'] = json_decode(stripslashes($this->input->post('noteMTR')));
+        $order['codeMTR'] = json_decode(stripslashes (addslashes($this->input->post('codeMTR'))) );
+		$order['numberPartMTR'] = json_decode(stripslashes (addslashes($this->input->post('numberPartMTR'))) );
+		$order['nameMTR'] = json_decode(stripslashes (addslashes($this->input->post('nameMTR'))));
+		$order['ukObjectMTR'] = json_decode(stripslashes (addslashes($this->input->post('ukObjectMTR'))) );
+		$order['numberObjectMTR'] = json_decode(stripslashes (addslashes($this->input->post('numberObjectMTR'))) );
+		$order['sizeMTR'] = json_decode(stripslashes (addslashes($this->input->post('sizeMTR'))) );
+		$order['sumMTR'] = json_decode(stripslashes (addslashes($this->input->post('sumMTR'))) );
+		$order['filialMTR'] = json_decode(stripslashes (addslashes($this->input->post('filialMTR'))) );
+		$order['deliveryMTR'] = json_decode(stripslashes (addslashes($this->input->post('deliveryMTR'))) );
+		$order['noteMTR'] = json_decode(stripslashes (addslashes($this->input->post('noteMTR'))) );
+
 		$order['number_orderMTR'] = $this->input->post('number_orderMTR');
-		$order['date_orderMTR'] = $this->input->post('date_orderMTR');
+        $order['date_orderMTR'] = date('Y-m-d', strtotime($this->input->post('date_orderMTR')));
 		$order['address_orderMTR'] = $this->input->post('address_orderMTR');
         $order['name_skladMTR'] = $this->input->post('name_skladMTR');
 		$order['author_order'] = $this->session->userdata('username');
 		$order['datetime'] = date("Y-m-d H:i:s");
 		$order['id_order'] = $this->input->post('id_order');
-		print_r($order['nameMTR']);
 
 		/*Формируем запрос к базе и заносим данные*/
         for ($i = 0; $i < count($order['codeMTR']); $i++) {
@@ -1053,13 +1053,12 @@ class Main extends CI_Controller {
         }
 			$query = "INSERT INTO order_mtr (id_bond_all_orders, codeMTR, numberPart, nameMTR, ukObjectMTR, numberObjectMTR, sizeMTR, sumMTR, filialMTR, deliveryMTR, noteMTR, number_orderMTR, date_orderMTR, address_orderMTR, name_skladMTR, author_Order ,create_date_order)
 									VALUES" . implode(", ", $order_query);
-            print_r($query);
 			$query_flag = sprintf("UPDATE all_orders SET flag = 0 WHERE id_all_orders='%s';", trim($order['id_order'])); //flag status - создание
 			$this->load->model('Model_db');
 			$this->Model_db->saveOrder($query_flag);
 			$this->Model_db->saveOrder($query);
 /*Отправляем ID строки*/
-//			print_r($order['id_order']);
+			print_r($order['id_order']);
 	}
 
 /*AJAX Занесении информации о созданном распоряжении в таблицу order_mtr*/
