@@ -1051,7 +1051,7 @@ class Main extends CI_Controller {
 							   '" . $order['author_order'] . "', 
 							   '" . $order['datetime'] . "')";
         }
-        
+
 			$query = "INSERT INTO order_mtr (id_bond_all_orders, codeMTR, numberPart, nameMTR, ukObjectMTR, numberObjectMTR, sizeMTR, sumMTR, filialMTR, deliveryMTR, noteMTR, number_orderMTR, date_orderMTR, address_orderMTR, name_skladMTR, author_Order ,create_date_order)
 									VALUES" . implode(", ", $order_query);
 			$query_flag = sprintf("UPDATE all_orders SET flag = 0 WHERE id_all_orders='%s';", trim($order['id_order'])); //flag status - создание
