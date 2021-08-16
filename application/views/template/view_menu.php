@@ -205,6 +205,12 @@
                                     <span>Логи</span>
                                 </a>
                             </li>
+                            <li>
+                                    <a href="<?=base_url();?>main/javascript">
+                                        <i class="fa fa-database" aria-hidden="true"></i>
+                                        <span>JavaScript</span>
+                                    </a>
+                            </li>
                             <?php } ?>
                         </ul>
                     </nav>

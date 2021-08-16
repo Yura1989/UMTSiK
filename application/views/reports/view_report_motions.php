@@ -69,6 +69,20 @@
                             </div>
                             <footer class="panel-footer">
                                 <button name="button_search_name_mtr" class="btn btn-primary">Поиск</button>
+                                <?php if (isset($_POST['button_search_name_mtr'])) { ?>
+                                    <button type="button" name="button_download_filials" onclick="ExportXls(this);"
+                                            data-id_button_name_mtr="button_search_name_mtr"
+                                            data-id_motion="<?php
+                                            $n=0;
+                                            foreach($orders as $item):
+                                                if(isset($item['id_bond_order_mtr']))
+                                                    echo($item['id_bond_order_mtr'].',');
+                                                $n=$n+1;
+                                            endforeach;
+                                            ?>"
+                                            class="download btn btn-success">Скачать
+                                    </button>
+                                <?php } ?>
                             </footer>
                         </section>
                     </form>
@@ -107,9 +121,29 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <div class="col-sm-8">
+                                            <input type="checkbox" name="" id="checkboxOrder" class="checkboxOrder" data-checkboxOrder="checkboxOrder" value="checkboxOrder" >
+                                            <label class="col-sm-8" for="checkboxOrder">Учитывать МТР по Распоряжениям в статусе: "Согласован", "В работе"</label>
+                                    </div>
+                                </div>
                             </div>
                             <footer class="panel-footer">
                                 <button name="button_search_mtr" class="btn btn-primary">Поиск </button>
+                                <?php if (isset($_POST['button_search_mtr'])) { ?>
+                                    <button type="button" name="button_download_filials" onclick="ExportXls(this);"
+                                            data-id_button_search_mtr="button_search_mtr"
+                                            data-id_motion="<?php
+                                            $n=0;
+                                            foreach($orders as $item):
+                                                if(isset($item['id_bond_all_orders']))
+                                                    echo($item['id_bond_all_orders'].',');
+                                                $n=$n+1;
+                                            endforeach;
+                                            ?>"
+                                            class="download btn btn-success">Скачать
+                                    </button>
+                                <?php } ?>
                             </footer>
                         </section>
                     </form>
@@ -153,9 +187,19 @@
                             </div>
                             <footer class="panel-footer">
                                 <button name="button_search_filials" class="btn btn-primary">Поиск </button>
-                                <?php if (isset($_POST['button_search_filials'])) { ?> <button type="button" name="button_download_filials" onclick="ExportXls(this);"  data-start_date_3='<?php if(isset($_POST['start_date_3'])) echo($_POST['start_date_3']); ?>' data-end_date_3='<?php if(isset($_POST['end_date_3'])) echo($_POST['end_date_3']); ?>' data-id_motion="<?php $n=0;  foreach($orders as $item): ?> <?php if(isset($item['id_motion'])) echo($item['id_motion'].','); $n=$n+1; endforeach; ?>" class="btn btn-success">Скачать </button> <?php } ?>
-                                <?php if (isset($_POST['button_search_filials'])) { ?> <button type="button" href="<?=base_url();?>Main/export_select_Motion" name="button_download" class="btn btn-success">Скачать </button> <?php } ?>
-                                <a href="<?=base_url();?>Main/export_select_Motion"><input type="button" class="button_active" value="1"></a>
+                                <?php if (isset($_POST['button_search_filials'])) { ?>
+                                    <button type="button" name="button_download_filials" onclick="ExportXls(this);"
+                                            data-id_motion="<?php
+                                            $n=0;
+                                            foreach($orders as $item):
+                                                if(isset($item['id_bond_order_mtr']))
+                                                    echo($item['id_bond_order_mtr'].',');
+                                                $n=$n+1;
+                                            endforeach;
+                                            ?>"
+                                            class="download btn btn-success">Скачать
+                                    </button>
+                                <?php } ?>
                             </footer>
                         </section>
                     </form>
@@ -797,7 +841,6 @@
             } );
         } ).draw();
 
-
 //Вывод даты
         $('.input-daterange').datepicker({
             format: "dd-mm-yyyy",
@@ -807,28 +850,63 @@
         });
     });
 
+    function createUUID() {
+        var s = [];
+        var hexDigits = "0123456789ABCDEF";
+        for (var i = 0; i < 32; i++) {
+            s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+        }
+        s[12] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
+        s[16] = hexDigits.substr((s[16] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
+
+        var uuid = s.join("");
+        return uuid;
+    }
+
     //Экспорт в Excel
     function ExportXls(id){
-        var id_id_bond_all_motion = id.getAttribute('data-id_motion');
-        var start_date_3 = id.getAttribute('data-start_date_3');
-        var end_date_3 = id.getAttribute('data-end_date_3');
+        var id_bond_order_mtr = id.getAttribute('data-id_motion');
+        var id_button_name_mtr = id.getAttribute('data-id_button_name_mtr');
+        var id_button_search_mtr = id.getAttribute('data-id_button_search_mtr');
+        var checkbox_order_id = document.getElementById('checkboxOrder');
+
+        if (checkbox_order_id.checked) {
+            var checkbox_Order = [];
+            $('.checkboxOrder:checked').each(function () {
+                checkbox_Order.push($(this).val());
+            });
+            console.log('----------');
+            console.log(checkbox_Order[0]);
+            console.log('----------');
+        } else {
+            console.log('checkbox не выбран');
+        }
+
+
         console.log("Export XSL");
-        console.log(id_id_bond_all_motion);
-        // console.log(start_date_3);
-        // console.log(end_date_3);
+        console.log(id_bond_order_mtr);
+        var guid = createUUID();
+        console.log(guid);
 
         $.ajax({
             url: "<?=base_url();?>Main/export_select_Motion",
             type: "POST",
             data: {
-                   id_id_bond_all_motion : id_id_bond_all_motion
+                   id_bond_order_mtr : id_bond_order_mtr,
+                   guid : guid,
+                   id_button_name_mtr : id_button_name_mtr,
+                   id_button_search_mtr : id_button_search_mtr,
+                   checkbox_Order: checkbox_Order
             },
             success: function(data){
                 console.log(data);
-                location.search = data;
-                //window.location ="<?//=base_url();?>//Main/export_select_Motion";
-                //window.open('<?//=base_url();?>//Main/export_select_Motion');
+                    var link = document.createElement('a');
+                    link.setAttribute('href', '<?=base_url();?>'+guid+'.xlsx');
+                    link.click();
+                    return false;
             }
         })
+
     }
+
 </script>

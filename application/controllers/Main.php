@@ -1,9 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class Main extends CI_Controller
 {
@@ -3053,369 +3053,419 @@ class Main extends CI_Controller
     function export_select_Motion()
     {
         $this->load->model('Model_db');
-//        print_r($_POST);
-        $id = mb_substr($this->input->post('id_id_bond_all_motion'), 0, -1);
-//        print_r($id);
+        $id = mb_substr($this->input->post('id_bond_order_mtr'), 0, -1);
+        $guid = $this->input->post('guid');
+        $id_button_name_mtr = $this->input->post('id_button_name_mtr');
+        $id_button_search_mtr = $this->input->post('id_button_search_mtr');
+        $checkbox_Order = $this->input->post('checkbox_Order');
+        print_r($checkbox_Order[0]);
+        /*
+          НЕобходимы проверки:
+        1. Отчет по наименованию МТР - неробходимо проверки когда Распоряжение создано, но информация по нему еще не попала в Приложение № 3
+        2. Отчет по неотправленным МТР - Необходимо учесть нулевые показатели на участках, когда ноль или - показывает как будто груз получен, это не так
+           Необходимо доработать сам отчет информация выходит неверная
+        */
+        /*
+         * Отчет по наименованию МТР
+         */
+        if ((isset($id_button_name_mtr)) && ($id_button_name_mtr == 'button_name_mtr')) {
+            $query = sprintf("SELECT * FROM motion m JOIN order_mtr o ON m.id_bond_order_mtr=o.id_order WHERE id_bond_order_mtr in (%s);", trim($id));
+            $result = $this->Model_db->select_id_all_order($query);
+            $i_name_mtr = 0;
+            $n_guid_motion = "'";
+            foreach ($result as $item) {
+                $n_guid_motion=$n_guid_motion . ",'" . $item['guid_motion'] . "'";
+                $i_name_mtr++;
+            }
+            $n_guid_motion = mb_substr($n_guid_motion, 2);
+            $query_orders = sprintf("SELECT * FROM all_orders WHERE bond_guid_motion in (%s);", trim($n_guid_motion));
+            $orders = $this->Model_db->select_id_all_order($query_orders);
+        } elseif ((isset($id_button_search_mtr)) && ($id_button_search_mtr == 'button_search_mtr') && ($checkbox_Order[0] == 'checkboxOrder')) {
+        /*
+        * Отчет по неотправленным МТР с учетом типов Распоряжений
+        */
+            print_r($checkbox_Order);
+            $query = sprintf("SELECT * FROM `all_orders` WHERE `flag` != '0' && `flag` != '10' && `flag` != '60' && id_all_orders in (%s);", trim($id));
+            $result_motion = $this->Model_db->select_id_all_order($query);
 
-//
-//        $query_motion = sprintf("SELECT * FROM motion WHERE id_motion IN (%s);", trim($id));
-////        print_r($query_motion);
-//        $result_motion = $this->Model_db->select_id_all_order($query_motion);
-//        print_r($result_motion);
+            $i_name_mtr = 0;
+            $n_guid_motion = "'";
+            foreach ($result_motion as $item) {
+                $n_guid_motion=$n_guid_motion . ",'" . $item['bond_guid_motion'] . "'";
+                $i_name_mtr++;
+            }
+            $n_guid_motion = mb_substr($n_guid_motion, 2);
+            print_r($n_guid_motion);
 
+
+            $query_orders = sprintf("SELECT * FROM motion m JOIN order_mtr o ON m.id_bond_order_mtr=o.id_order WHERE guid_motion in (%s);", trim($n_guid_motion));
+            $result = $this->Model_db->select_id_all_order($query_orders);
+            print_r($query_orders);
+
+        } elseif ((isset($id_button_search_mtr)) && ($id_button_search_mtr == 'button_search_mtr') ) {
+            /*
+            * Отчет по неотправленным МТР
+            */
+//          $query = sprintf("SELECT * FROM order_mtr o WHERE o.id_order not in (SELECT id_bond_order_mtr FROM motion);");
+            $query = sprintf("SELECT * FROM `all_orders` WHERE `flag` != '0' && `flag` != '10' && `flag` != '20' && `flag` != '30' && `flag` != '60';");
+            print_R($query);
+            $result_motion = $this->Model_db->select_id_all_order($query);
+//          print_R($result_motion);
+
+        } else {
+        /*
+        * Отчет по направлению
+        */
+            $query = sprintf("select * from motion m join order_mtr o on m.id_bond_order_mtr=o.id_order where id_bond_order_mtr in (%s);", trim($id));
+            $result = $this->model_db->select_id_all_order($query);
+            $query_motion = sprintf("select * from all_motion where id_all_motion in (%s);", trim($id));
+            $result_motion = $this->model_db->select_id_all_order($query_motion);
+            $m = 0;
+            $n_motion = "'";
+            foreach ($result_motion as $item) {
+                $n_motion=$n_motion . ",'" . $item['number_motion'] . "'";
+                $m++;
+            }
+            $n_motion = mb_substr($n_motion, 2);
+            $query_orders = sprintf("select * from all_orders where bond_guid_motion in (%s);", trim($n_motion));
+            $orders = $this->model_db->select_id_all_order($query_orders);
+        }
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A1', "1");
-        $sheet->setCellValue('A2', $id);
+
+        $filename = date("H-i-s");
+
+        /*Название листа*/
+        $sheet->setTitle('Приложение 3');
+
+        /*формируем название таблицы*/
+        $sheet->setCellValue('A1', 'Приложение №3 к распоряжению №____________________');
+        $sheet->setCellValue('A5', '  Информация о движении МТР на базе(участке)');
+        $row_start = 6;
+        $row_head = 0;
+        $i = 0;
+        $row_head = $row_start + $i;
+        $row_table_head = $row_head + 1;
+        /*Формируем шапку таблицы*/
+        $table_columns = array("№ п/п", "Наименование МТР", "Массогобаритные характеристики***", "Ед. изм.", "Наименование объекта", "Инвентарный № объекта",
+            "вес 1 ед.", "Всего", "Груз сформирован в контейнер/автотранспорт", "Дата поступления МТР на базу, участок", "Дата заявки на отгрузку	",
+            "Дата отгрузки", "Информация об отгрузке на текущую дату", "Отгружено", "Остаток", "Наименование транзитного* или конечного получателя груза",
+            "Наименование филиала получателя, указывается, в случае транзитной отправки груза", "№ накладной на отпуск МТР на сторону",
+            "Дата накладной на отпуск МТР на сторону", "Примечание по доставке", "Приоритет(1,2,3)**", "Общие примечания");
+        $number_table_columns = array("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "29", "29", "30");
+        $sheet->setCellValue('A' . $row_table_head, '№ п/п');
+        $sheet->setCellValue('B' . $row_table_head, 'Код МТР');
+        $sheet->setCellValue('C' . $row_table_head, 'Наименование МТР');
+        $sheet->setCellValue('D' . $row_table_head, 'Массогобаритные характеристики***');
+
+        $sheet->setCellValue('G' . $row_table_head, 'Ед. изм.');
+        $sheet->setCellValue('H' . $row_table_head, 'Наименование объекта');
+        $sheet->setCellValue('I' . $row_table_head, 'Инвентарный № объекта');
+        $sheet->setCellValue('J' . $row_table_head, 'Кол-во');
+        $sheet->setCellValue('K' . $row_table_head, 'вес 1 ед.');
+        $sheet->setCellValue('L' . $row_table_head, 'Всего');
+        $sheet->setCellValue('M' . $row_table_head, 'Дата заявки на отгрузку');
+        $sheet->setCellValue('N' . $row_table_head, 'Заявка на контейнер/автотранспорт');
+        $sheet->setCellValue('O' . $row_table_head, 'Дата отгрузки');
+        $sheet->setCellValue('P' . $row_table_head, 'Груз сформирован в контейнер/автотранспорт');
+        $sheet->setCellValue('Q' . $row_table_head, 'Отгружено');
+        $sheet->setCellValue('R' . $row_table_head, 'Остаток');
+        $sheet->setCellValue('S' . $row_table_head, 'Наименование транзитного* или конечного получателя груза');
+        $sheet->setCellValue('T' . $row_table_head, 'Наименование филиала получателя');
+        $sheet->setCellValue('U' . $row_table_head, 'Накладная формы М11');
+
+        $sheet->setCellValue('W' . $row_table_head, 'Приоритет(1,2,3)**');
+        $sheet->setCellValue('X' . $row_table_head, 'Примечание по доставке');
+        $sheet->setCellValue('Y' . $row_table_head, 'Общие примечания');
+        $sheet->setCellValue('Z' . $row_table_head, 'Заполняется транзитным участком, базой ЮУМТСиК');
+
+        $row_table_head_merge = $row_table_head + 1;
+        $sheet->setCellValue('D' . $row_table_head_merge, 'Длина, м');
+        $sheet->setCellValue('E' . $row_table_head_merge, 'Ширина, м');
+        $sheet->setCellValue('F' . $row_table_head_merge, 'Высота, м');
+
+        $sheet->setCellValue('U' . $row_table_head_merge, '№ накладной');
+        $sheet->setCellValue('V' . $row_table_head_merge, 'Дата накладной');
+
+        $sheet->setCellValue('Z' . $row_table_head_merge, 'Дата поступления МТР на базу, участок');
+        $sheet->setCellValue('AA' . $row_table_head_merge, '№ накладной М 15');
+        $sheet->setCellValue('AB' . $row_table_head_merge, 'Дата накладной М 15');
+        $sheet->setCellValue('AC' . $row_table_head_merge, 'Дата получения МТР филиалом получателя');
+        $sheet->setCellValue('AD' . $row_table_head_merge, 'Принято, кол-во');
+
+        $column = 1;
+        $row_table_head_number = $row_table_head_merge + 1;
+        foreach ($number_table_columns as $item) {
+            $sheet->setCellValueByColumnAndRow($column, $row_table_head_number, $item);
+            $column++;
+        }
+
+        /*формируем тело Excel*/
+        $row_table_head_number_t = $row_table_head_number + 1;
+        $row_next = 0;
+        $n = 0;
+        $row_motion = 0;
+        foreach ($result as $item) {
+            $row_next = $row_table_head_number_t + $n;
+            /*Перенос по словам*/
+            $spreadsheet->getActiveSheet()->getStyle('A' . $row_next . ':AC' . $row_next)
+                ->getAlignment()->setWrapText(true);
+
+            $sheet->setCellValue('A' . $row_next, $n + 1);
+            $sheet->setCellValue('B' . $row_next, $item['codeMTR']);
+            $sheet->setCellValue('C' . $row_next, $item['nameMTR']);
+
+            $sheet->setCellValue('D' . $row_next, $item['length_motion']);
+            $sheet->setCellValue('E' . $row_next, $item['width_motion']);
+            $sheet->setCellValue('F' . $row_next, $item['height_motion']);
+
+            $sheet->setCellValue('G' . $row_next, $item['sizeMTR']);
+            $sheet->setCellValue('H' . $row_next, $item['ukObjectMTR']);
+            $sheet->setCellValue('I' . $row_next, $item['numberObjectMTR']);
+            $sheet->setCellValue('J' . $row_next, $item['sumMTR']);
+            $sheet->setCellValue('K' . $row_next, $item['weight_motion']);
+            $sheet->setCellValue('L' . $row_next, $item['total_motion']);
+            if ($item['dateRequest_motion'] == NULL || $item['dateRequest_motion'] == '1970-01-01' || $item['dateRequest_motion'] == '0000-00-00') {
+                $dateRequest_motion = '-';
+            } else {
+                $dateRequest_motion = (date('d-m-Y', strtotime($item['dateRequest_motion'])));
+            }
+            $sheet->setCellValue('M' . $row_next, $dateRequest_motion);
+            $sheet->setCellValue('N' . $row_next, $item['infoShipments_motion']);
+            if ($item['dateShipments_motion'] == NULL || $item['dateShipments_motion'] == '1970-01-01' || $item['dateShipments_motion'] == '0000-00-00') {
+                $dateShipments_motion = '-';
+            } else {
+                $dateShipments_motion = (date('d-m-Y', strtotime($item['dateShipments_motion'])));
+            }
+            $sheet->setCellValue('O' . $row_next, $dateShipments_motion);
+            $sheet->setCellValue('P' . $row_next, $item['cargo_motion']);
+            $sheet->setCellValue('Q' . $row_next, $item['shipped_motion']);
+
+            $sheet->setCellValue('R' . $row_next, $item['remains_motion']);
+            $sheet->setCellValue('S' . $row_next, $item['filialMTR']);
+            $sheet->setCellValue('T' . $row_next, $item['address_orderMTR']);
+            $sheet->setCellValue('U' . $row_next, $item['numberOverhead_motion']);
+
+            if ($item['dateOverhead_motion'] == NULL || $item['dateOverhead_motion'] == '1970-01-01' || $item['dateOverhead_motion'] == '0000-00-00') {
+                $dateOverhead_motion = '-';
+            } else {
+                $dateOverhead_motion = (date('d-m-Y', strtotime($item['dateOverhead_motion'])));
+            }
+            $sheet->setCellValue('V' . $row_next, $dateOverhead_motion);
+            $sheet->setCellValue('W' . $row_next, $item['deliveryMTR']);
+            $sheet->setCellValue('X' . $row_next, $item['noteMTR']);
+            $sheet->setCellValue('Y' . $row_next, $item['note_motion']);
+
+            if ($item['dateArrival_motion'] == NULL || $item['dateArrival_motion'] == '1970-01-01' || $item['dateArrival_motion'] == '0000-00-00') {
+                $dateArrival_motion = '-';
+            } else {
+                $dateArrival_motion = (date('d-m-Y', strtotime($item['dateArrival_motion'])));
+            }
+            $sheet->setCellValue('Z' . $row_next, $dateArrival_motion);
+            $sheet->setCellValue('AA' . $row_next, $item['numberM15_motion']);
+            if ($item['dateM15_motion'] == NULL || $item['dateM15_motion'] == '1970-01-01' || $item['dateM15_motion'] == '0000-00-00') {
+                $dateM15_motion = '-';
+            } else {
+                $dateM15_motion = (date('d-m-Y', strtotime($item['dateM15_motion'])));
+            }
+            $sheet->setCellValue('AB' . $row_next, $dateM15_motion);
+            if ($item['dateFilial_motion'] == NULL || $item['dateFilial_motion'] == '1970-01-01' || $item['dateFilial_motion'] == '0000-00-00') {
+                $dateFilial_motion = '-';
+            } else {
+                $dateFilial_motion = (date('d-m-Y', strtotime($item['dateFilial_motion'])));
+            }
+            $sheet->setCellValue('AC' . $row_next, $dateFilial_motion);
+            $sheet->setCellValue('AD' . $row_next, $item['recd']);
+            $n++;
+            $row_motion++;
+        }
+        /*Стиль footer */
+        $stylefooter = array(
+            'font' => array(
+                'size' => 10,
+                'italic' => true,
+            ),
+            'alignment' => array(
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+            ),
+        );
+
+        $row_footer = $row_next;
+        $row_footer = $row_footer + 1;
+        $sheet->setCellValue('A' . $row_footer, '*транзитный получатель- это участок или база по хранению и реализации МТР Югорского УМТСиК или филиал Общества , который в логистической схеме доставки груза конечному получателю, выступает как база временного хранения  ');
+        $spreadsheet->getActiveSheet()->mergeCells('A' . ($row_footer) . ':AD' . ($row_footer));
+        $sheet->getStyle('A' . ($row_footer) . ':AD' . ($row_footer))->applyFromArray($stylefooter);
+        $row_footer = $row_footer + 1;
+        $sheet->setCellValue('A' . $row_footer, '**-1-аварийный, 2-срочный, 3 -плановый');
+        $spreadsheet->getActiveSheet()->mergeCells('A' . ($row_footer) . ':AD' . ($row_footer));
+        $sheet->getStyle('A' . ($row_footer) . ':AD' . ($row_footer))->applyFromArray($stylefooter);
+        $row_footer = $row_footer + 1;
+        $sheet->setCellValue('A' . $row_footer, '***-указывается представителем базы или участка погрузочно-разгрузочных работ  по запросу перевозчика ');
+        $spreadsheet->getActiveSheet()->mergeCells('A' . ($row_footer) . ':AD' . ($row_footer));
+        $sheet->getStyle('A' . ($row_footer) . ':AD' . ($row_footer))->applyFromArray($stylefooter);
+        $row_footer = $row_footer + 1;
+        $sheet->setCellValue('A' . $row_footer, '****-заполняется при наличии выписанной накладной формы М-15, графа необходимо для исполнения распоряжения №_______в части уведомления филиалов о необходимости получения МТР с приобъектного склада.');
+        $spreadsheet->getActiveSheet()->mergeCells('A' . ($row_footer) . ':AD' . ($row_footer));
+        $sheet->getStyle('A' . ($row_footer) . ':AD' . ($row_footer))->applyFromArray($stylefooter);
+        $row_footer = $row_footer + 2;;
+        $sheet->setCellValue('A' . $row_footer, 'Начальник участка, базы_______________________ ');
+        $spreadsheet->getActiveSheet()->mergeCells('A' . ($row_footer) . ':AD' . ($row_footer));
+
+        /*формируем footer*/
+//		foreach ($author as $item_order){
+//			$sheet->setCellValue('A'.$row_footer, 'Исп. '.$item_order['sername'].' '.$item_order['name'].' '.$item_order['patronymic']);
+//		}
+        $spreadsheet->getActiveSheet()->mergeCells('A' . ($row_footer) . ':AD' . ($row_footer));
+
+        $row_footer = $row_footer + 1;
+        $sheet->setCellValue('A' . $row_footer, 'Тел._______________________');
+        $spreadsheet->getActiveSheet()->mergeCells('A' . ($row_footer) . ':AD' . ($row_footer));
+        $row_footer = $row_footer + 2;
+        $sheet->setCellValue('A' . $row_footer, 'Информация о движении МТР на базе (участке), участке сформированно на основании:');
+        foreach ($orders as $order) {
+            $row_footer = $row_footer + 1;
+            $sheet->setCellValue('A' . $row_footer, 'Распоряжения ' . '№' . $order['number_order'] . ' от ' . date('d-m-Y', strtotime($order['date_order'])));
+            $spreadsheet->getActiveSheet()->mergeCells('A' . $row_footer . ':AD' . $row_footer);
+        }
+
+
+        /*Автоматическое вычисление ширины столбца A*/
+        $spreadsheet->getActiveSheet()->getColumnDimension('A')->setWidth(8);
+        /*Ширину столбца B*/
+        $spreadsheet->getActiveSheet()->getColumnDimension('B')->setWidth(10);
+        $spreadsheet->getActiveSheet()->getColumnDimension('C')->setWidth(20);
+        $spreadsheet->getActiveSheet()->getColumnDimension('D')->setWidth(10);
+        $spreadsheet->getActiveSheet()->getColumnDimension('E')->setWidth(10);
+        $spreadsheet->getActiveSheet()->getColumnDimension('F')->setWidth(10);
+        $spreadsheet->getActiveSheet()->getColumnDimension('G')->setWidth(10);
+        $spreadsheet->getActiveSheet()->getColumnDimension('H')->setWidth(15);
+        $spreadsheet->getActiveSheet()->getColumnDimension('I')->setWidth(15);
+        $spreadsheet->getActiveSheet()->getColumnDimension('J')->setWidth(10);
+        $spreadsheet->getActiveSheet()->getColumnDimension('K')->setWidth(15);
+        $spreadsheet->getActiveSheet()->getColumnDimension('L')->setWidth(15);
+        $spreadsheet->getActiveSheet()->getColumnDimension('M')->setWidth(15);
+        $spreadsheet->getActiveSheet()->getColumnDimension('N')->setWidth(15);
+        $spreadsheet->getActiveSheet()->getColumnDimension('O')->setWidth(15);
+        $spreadsheet->getActiveSheet()->getColumnDimension('P')->setWidth(15);
+        $spreadsheet->getActiveSheet()->getColumnDimension('Q')->setWidth(12);
+        $spreadsheet->getActiveSheet()->getColumnDimension('R')->setWidth(12);
+        $spreadsheet->getActiveSheet()->getColumnDimension('S')->setWidth(25);
+        $spreadsheet->getActiveSheet()->getColumnDimension('T')->setWidth(25);
+        $spreadsheet->getActiveSheet()->getColumnDimension('U')->setWidth(15);
+        $spreadsheet->getActiveSheet()->getColumnDimension('V')->setWidth(15);
+        $spreadsheet->getActiveSheet()->getColumnDimension('W')->setWidth(15);
+        $spreadsheet->getActiveSheet()->getColumnDimension('X')->setWidth(15);
+        $spreadsheet->getActiveSheet()->getColumnDimension('Y')->setWidth(15);
+        $spreadsheet->getActiveSheet()->getColumnDimension('Z')->setWidth(15);
+        $spreadsheet->getActiveSheet()->getColumnDimension('AA')->setWidth(15);
+        $spreadsheet->getActiveSheet()->getColumnDimension('AB')->setWidth(15);
+        $spreadsheet->getActiveSheet()->getColumnDimension('AC')->setWidth(15);
+        $spreadsheet->getActiveSheet()->getColumnDimension('AD')->setWidth(15);
+        /*Высота строк*/
+//		$spreadsheet->getActiveSheet()->getDefaultRowDimension()->setRowHeight(30);
+
+        /*Перенос по словам*/
+        $spreadsheet->getActiveSheet()->getStyle('A' . $row_table_head . ':AD' . $row_table_head)
+            ->getAlignment()->setWrapText(true);
+        $row_table_head_two = $row_table_head + 1;
+        $spreadsheet->getActiveSheet()->getStyle('A' . $row_table_head_two . ':AD' . $row_table_head_two)
+            ->getAlignment()->setWrapText(true);
+//
+//
+        /*Стиль Header A1 - X1*/
+        $styleHeader = array(
+            'font' => array(
+                'italic' => true,
+            ),
+            'alignment' => array(
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+            ),
+        );
+
+        /*Стиль Header A2 - X4*/
+        $styleHeaderAI = array(
+            'font' => array(
+                'bold' => true,
+            ),
+            'alignment' => array(
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+            ),
+        );
+
+        /*Стиль title*/
+        $styleFootertitle = array(
+            'font' => array(
+                'size' => 10,
+            ),
+            'alignment' => array(
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+            ),
+            'borders' => array(
+                'allBorders' => array(
+                    'style' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN
+                )
+            ),
+            'fill' => array(
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'color' => array(
+                    'rgb' => 'C0C0C0')
+            ),
+        );
+
+        /*Стиль Title A1-X1*/
+        $styleTitle = array(
+            'font' => array(
+                'bold' => true,
+                'size' => 16
+            ),
+            'alignment' => array(
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+            ),
+        );
+
+        /*Стиль BODY*/
+        $styleBody = array(
+            'alignment' => array(
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+            ),
+            'borders' => array(
+                'allBorders' => array(
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN
+                )
+            ),
+        );
+
+        /*Объединение ячеек*/
+        $spreadsheet->getActiveSheet()->mergeCells('A1:AD1');
+        $spreadsheet->getActiveSheet()->mergeCells('A2:AD2');
+        $spreadsheet->getActiveSheet()->mergeCells('A3:AD3');
+        $spreadsheet->getActiveSheet()->mergeCells('A4:AD4');
+        $spreadsheet->getActiveSheet()->mergeCells('A5:AD5');
+        $spreadsheet->getActiveSheet()->mergeCells('D' . $row_table_head . ':F' . $row_table_head);
+        $spreadsheet->getActiveSheet()->mergeCells('U' . $row_table_head . ':V' . $row_table_head);
+        $spreadsheet->getActiveSheet()->mergeCells('Z' . $row_table_head . ':AD' . $row_table_head);
+		$spreadsheet->getActiveSheet()->getRowDimension('2')->setRowHeight(40);
+        $spreadsheet->getActiveSheet()->getStyle('A5:AD5')->applyFromArray($styleTitle);
+        $spreadsheet->getActiveSheet()->getStyle('A' . $row_start . ':AD' . $row_head)->applyFromArray($styleTitle);
+
+        /*Применение стиля к телу*/
+        $sheet->getStyle('A' . $row_table_head . ':AD' . ($row_next))->applyFromArray($styleBody);
+        $sheet->getStyle('A1:AD1')->applyFromArray($styleHeader);
+        $sheet->getStyle('A2:AD2')->applyFromArray($styleHeaderAI);
+        $sheet->getStyle('A3:AD3')->applyFromArray($styleHeaderAI);
+        $sheet->getStyle('A4:AD4')->applyFromArray($styleHeaderAI);
+        $sheet->getStyle('A' . $row_table_head . ':AD' . $row_table_head)->applyFromArray($styleFootertitle);
+        $sheet->getStyle('A' . $row_table_head_merge . ':AD' . $row_table_head_merge)->applyFromArray($styleFootertitle);
+        $sheet->getStyle('A' . $row_table_head_number . ':AD' . $row_table_head_number)->applyFromArray($styleFootertitle);
 
         $writer = new Xlsx($spreadsheet);
-
-        $filename = 'SampleOrder';
-
-//        header('Content-Type: application/vnd.ms-excel');
-//        header('Content-Disposition: attachment;filename="'. $filename .'.xlsx"');
-//        header('Cache-Control: max-age=0');
-//        $writer->save('php://output'); // download file
-
-//        $writer = new Xlsx($spreadsheet);
-        $writer->save($filename.'.xlsx');
-//        $writer->save('php://output'); // download file
-//        header("Content-Type: application/vnd.ms-excel");
-//        redirect(base_url().$filename.'.xlsx');
-
-
-
-//        $spreadsheet = new Spreadsheet();
-//        $sheet = $spreadsheet->getActiveSheet();
-//
-//        /*Название листа*/
-//        $sheet->setTitle('Приложение 3');
-//
-//        /*формируем название таблицы*/
-//        $sheet->setCellValue('A1', 'Приложение №3 к распоряжению №____________________');
-//        $sheet->setCellValue('A5', '  Информация о движении МТР на базе, участке сформированно на основании:');
-//        $row_start = 6;
-//        $row_head = 0;
-//        $i = 0;
-//
-//        $row_table_head = $row_head + 1;
-//        /*Формируем шапку таблицы*/
-//        $table_columns = array("№ п/п", "Наименование МТР", "Массогобаритные характеристики***", "Ед. изм.", "Наименование объекта", "Инвентарный № объекта",
-//            "вес 1 ед.", "Всего", "Груз сформирован в контейнер/автотранспорт", "Дата поступления МТР на базу, участок", "Дата заявки на отгрузку	",
-//            "Дата отгрузки", "Информация об отгрузке на текущую дату", "Отгружено", "Остаток", "Наименование транзитного* или конечного получателя груза",
-//            "Наименование филиала получателя, указывается, в случае транзитной отправки груза", "№ накладной на отпуск МТР на сторону",
-//            "Дата накладной на отпуск МТР на сторону", "Примечание по доставке", "Приоритет(1,2,3)**", "Общие примечания");
-//        $number_table_columns = array("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "29", "29", "30");
-//        $sheet->setCellValue('A' . $row_table_head, '№ п/п');
-//        $sheet->setCellValue('B' . $row_table_head, 'Код МТР');
-//        $sheet->setCellValue('C' . $row_table_head, 'Наименование МТР');
-//        $sheet->setCellValue('D' . $row_table_head, 'Массогобаритные характеристики***');
-//
-//        $sheet->setCellValue('G' . $row_table_head, 'Ед. изм.');
-//        $sheet->setCellValue('H' . $row_table_head, 'Наименование объекта');
-//        $sheet->setCellValue('I' . $row_table_head, 'Инвентарный № объекта');
-//        $sheet->setCellValue('J' . $row_table_head, 'Кол-во');
-//        $sheet->setCellValue('K' . $row_table_head, 'вес 1 ед.');
-//        $sheet->setCellValue('L' . $row_table_head, 'Всего');
-//        $sheet->setCellValue('M' . $row_table_head, 'Дата заявки на отгрузку');
-//        $sheet->setCellValue('N' . $row_table_head, 'Заявка на контейнер/автотранспорт');
-//        $sheet->setCellValue('O' . $row_table_head, 'Дата отгрузки');
-//        $sheet->setCellValue('P' . $row_table_head, 'Груз сформирован в контейнер/автотранспорт');
-//        $sheet->setCellValue('Q' . $row_table_head, 'Отгружено');
-//        $sheet->setCellValue('R' . $row_table_head, 'Остаток');
-//        $sheet->setCellValue('S' . $row_table_head, 'Наименование транзитного* или конечного получателя груза');
-//        $sheet->setCellValue('T' . $row_table_head, 'Наименование филиала получателя');
-//        $sheet->setCellValue('U' . $row_table_head, 'Накладная формы М11');
-//
-//        $sheet->setCellValue('W' . $row_table_head, 'Приоритет(1,2,3)**');
-//        $sheet->setCellValue('X' . $row_table_head, 'Примечание по доставке');
-//        $sheet->setCellValue('Y' . $row_table_head, 'Общие примечания');
-//        $sheet->setCellValue('Z' . $row_table_head, 'Заполняется транзитным участком, базой ЮУМТСиК');
-//
-//        $row_table_head_merge = $row_table_head + 1;
-//        $sheet->setCellValue('D' . $row_table_head_merge, 'Длина, м');
-//        $sheet->setCellValue('E' . $row_table_head_merge, 'Ширина, м');
-//        $sheet->setCellValue('F' . $row_table_head_merge, 'Высота, м');
-//
-//        $sheet->setCellValue('U' . $row_table_head_merge, '№ накладной');
-//        $sheet->setCellValue('V' . $row_table_head_merge, 'Дата накладной');
-//
-//        $sheet->setCellValue('Z' . $row_table_head_merge, 'Дата поступления МТР на базу, участок');
-//        $sheet->setCellValue('AA' . $row_table_head_merge, '№ накладной М 15');
-//        $sheet->setCellValue('AB' . $row_table_head_merge, 'Дата накладной М 15');
-//        $sheet->setCellValue('AC' . $row_table_head_merge, 'Дата получения МТР филиалом получателя');
-//        $sheet->setCellValue('AD' . $row_table_head_merge, 'Принято, кол-во');
-//
-//        $column = 1;
-//        $row_table_head_number = $row_table_head_merge + 1;
-//        foreach ($number_table_columns as $item) {
-//            $sheet->setCellValueByColumnAndRow($column, $row_table_head_number, $item);
-//            $column++;
-//        }
-//
-//        /*формируем тело Excel*/
-//        $row_table_head_number_t = $row_table_head_number + 1;
-//        $row_next = 0;
-//        $n = 0;
-//        foreach ($result_motion as $item) {
-//            $row_next = $row_table_head_number_t + $n;
-//            /*Перенос по словам*/
-//            $spreadsheet->getActiveSheet()->getStyle('A' . $row_next . ':AC' . $row_next)
-//                ->getAlignment()->setWrapText(true);
-//
-//            $sheet->setCellValue('A' . $row_next, $n + 1);
-//            $sheet->setCellValue('B' . $row_next, $item['codeMTR']);
-//            $sheet->setCellValue('C' . $row_next, $item['nameMTR']);
-//
-//            $sheet->setCellValue('D' . $row_next, $item['length_motion']);
-//            $sheet->setCellValue('E' . $row_next, $item['width_motion']);
-//            $sheet->setCellValue('F' . $row_next, $item['height_motion']);
-//
-//            $sheet->setCellValue('G' . $row_next, $item['sizeMTR']);
-//            $sheet->setCellValue('H' . $row_next, $item['ukObjectMTR']);
-//            $sheet->setCellValue('I' . $row_next, $item['numberObjectMTR']);
-//            $sheet->setCellValue('J' . $row_next, $item['sumMTR']);
-//            $sheet->setCellValue('K' . $row_next, $item['weight_motion']);
-//            $sheet->setCellValue('L' . $row_next, $item['total_motion']);
-//            if ($item['dateRequest_motion'] == NULL || $item['dateRequest_motion'] == '1970-01-01' || $item['dateRequest_motion'] == '0000-00-00') {
-//                $dateRequest_motion = '-';
-//            } else {
-//                $dateRequest_motion = (date('d-m-Y', strtotime($item['dateRequest_motion'])));
-//            }
-//            $sheet->setCellValue('M' . $row_next, $dateRequest_motion);
-//            $sheet->setCellValue('N' . $row_next, $item['infoShipments_motion']);
-//            if ($item['dateShipments_motion'] == NULL || $item['dateShipments_motion'] == '1970-01-01' || $item['dateShipments_motion'] == '0000-00-00') {
-//                $dateShipments_motion = '-';
-//            } else {
-//                $dateShipments_motion = (date('d-m-Y', strtotime($item['dateShipments_motion'])));
-//            }
-//            $sheet->setCellValue('O' . $row_next, $dateShipments_motion);
-//            $sheet->setCellValue('P' . $row_next, $item['cargo_motion']);
-//            $sheet->setCellValue('Q' . $row_next, $item['shipped_motion']);
-//
-//            $sheet->setCellValue('R' . $row_next, $item['remains_motion']);
-//            $sheet->setCellValue('S' . $row_next, $item['filialMTR']);
-//            $sheet->setCellValue('T' . $row_next, $item['address_orderMTR']);
-//            $sheet->setCellValue('U' . $row_next, $item['numberOverhead_motion']);
-//
-//            if ($item['dateOverhead_motion'] == NULL || $item['dateOverhead_motion'] == '1970-01-01' || $item['dateOverhead_motion'] == '0000-00-00') {
-//                $dateOverhead_motion = '-';
-//            } else {
-//                $dateOverhead_motion = (date('d-m-Y', strtotime($item['dateOverhead_motion'])));
-//            }
-//            $sheet->setCellValue('V' . $row_next, $dateOverhead_motion);
-//            $sheet->setCellValue('W' . $row_next, $item['deliveryMTR']);
-//            $sheet->setCellValue('X' . $row_next, $item['noteMTR']);
-//            $sheet->setCellValue('Y' . $row_next, $item['note_motion']);
-//
-//            if ($item['dateArrival_motion'] == NULL || $item['dateArrival_motion'] == '1970-01-01' || $item['dateArrival_motion'] == '0000-00-00') {
-//                $dateArrival_motion = '-';
-//            } else {
-//                $dateArrival_motion = (date('d-m-Y', strtotime($item['dateArrival_motion'])));
-//            }
-//            $sheet->setCellValue('Z' . $row_next, $dateArrival_motion);
-//            $sheet->setCellValue('AA' . $row_next, $item['numberM15_motion']);
-//            if ($item['dateM15_motion'] == NULL || $item['dateM15_motion'] == '1970-01-01' || $item['dateM15_motion'] == '0000-00-00') {
-//                $dateM15_motion = '-';
-//            } else {
-//                $dateM15_motion = (date('d-m-Y', strtotime($item['dateM15_motion'])));
-//            }
-//            $sheet->setCellValue('AB' . $row_next, $dateM15_motion);
-//            if ($item['dateFilial_motion'] == NULL || $item['dateFilial_motion'] == '1970-01-01' || $item['dateFilial_motion'] == '0000-00-00') {
-//                $dateFilial_motion = '-';
-//            } else {
-//                $dateFilial_motion = (date('d-m-Y', strtotime($item['dateFilial_motion'])));
-//            }
-//            $sheet->setCellValue('AC' . $row_next, $dateFilial_motion);
-//            $sheet->setCellValue('AD' . $row_next, $item['recd']);
-//            $n++;
-//        }
-//        /*Стиль footer */
-//        $stylefooter = array(
-//            'font' => array(
-//                'size' => 10,
-//                'italic' => true,
-//            ),
-//            'alignment' => array(
-//                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
-//                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-//            ),
-//        );
-//
-//        $row_footer = $row_next;
-//        $row_footer = $row_footer + 1;
-//        $sheet->setCellValue('A' . $row_footer, '*транзитный получатель- это участок или база по хранению и реализации МТР Югорского УМТСиК или филиал Общества , который в логистической схеме доставки груза конечному получателю, выступает как база временного хранения  ');
-//        $spreadsheet->getActiveSheet()->mergeCells('A' . ($row_footer) . ':AD' . ($row_footer));
-//        $sheet->getStyle('A' . ($row_footer) . ':AD' . ($row_footer))->applyFromArray($stylefooter);
-//        $row_footer = $row_footer + 1;
-//        $sheet->setCellValue('A' . $row_footer, '**-1-аварийный, 2-срочный, 3 -плановый');
-//        $spreadsheet->getActiveSheet()->mergeCells('A' . ($row_footer) . ':AD' . ($row_footer));
-//        $sheet->getStyle('A' . ($row_footer) . ':AD' . ($row_footer))->applyFromArray($stylefooter);
-//        $row_footer = $row_footer + 1;
-//        $sheet->setCellValue('A' . $row_footer, '***-указывается представителем базы или участка погрузочно-разгрузочных работ  по запросу перевозчика ');
-//        $spreadsheet->getActiveSheet()->mergeCells('A' . ($row_footer) . ':AD' . ($row_footer));
-//        $sheet->getStyle('A' . ($row_footer) . ':AD' . ($row_footer))->applyFromArray($stylefooter);
-//        $row_footer = $row_footer + 1;
-//        $sheet->setCellValue('A' . $row_footer, '****-заполняется при наличии выписанной накладной формы М-15, графа необходимо для исполнения распоряжения №_______в части уведомления филиалов о необходимости получения МТР с приобъектного склада.');
-//        $spreadsheet->getActiveSheet()->mergeCells('A' . ($row_footer) . ':AD' . ($row_footer));
-//        $sheet->getStyle('A' . ($row_footer) . ':AD' . ($row_footer))->applyFromArray($stylefooter);
-//        $row_footer = $row_footer + 2;;
-//        $sheet->setCellValue('A' . $row_footer, 'Начальник участка, базы_______________________ ');
-//        $spreadsheet->getActiveSheet()->mergeCells('A' . ($row_footer) . ':AD' . ($row_footer));
-//
-//        /*формируем footer*/
-////		foreach ($author as $item_order){
-////			$sheet->setCellValue('A'.$row_footer, 'Исп. '.$item_order['sername'].' '.$item_order['name'].' '.$item_order['patronymic']);
-////		}
-//        $spreadsheet->getActiveSheet()->mergeCells('A' . ($row_footer) . ':AD' . ($row_footer));
-//
-//        $row_footer = $row_footer + 1;
-//        $sheet->setCellValue('A' . $row_footer, 'Тел._______________________');
-//        $spreadsheet->getActiveSheet()->mergeCells('A' . ($row_footer) . ':AD' . ($row_footer));
-//
-//        /*Автоматическое вычисление ширины столбца A*/
-//        $spreadsheet->getActiveSheet()->getColumnDimension('A')->setWidth(8);
-//        /*Ширину столбца B*/
-//        $spreadsheet->getActiveSheet()->getColumnDimension('B')->setWidth(10);
-//        $spreadsheet->getActiveSheet()->getColumnDimension('C')->setWidth(20);
-//        $spreadsheet->getActiveSheet()->getColumnDimension('D')->setWidth(10);
-//        $spreadsheet->getActiveSheet()->getColumnDimension('E')->setWidth(10);
-//        $spreadsheet->getActiveSheet()->getColumnDimension('F')->setWidth(10);
-//        $spreadsheet->getActiveSheet()->getColumnDimension('G')->setWidth(10);
-//        $spreadsheet->getActiveSheet()->getColumnDimension('H')->setWidth(15);
-//        $spreadsheet->getActiveSheet()->getColumnDimension('I')->setWidth(15);
-//        $spreadsheet->getActiveSheet()->getColumnDimension('J')->setWidth(10);
-//        $spreadsheet->getActiveSheet()->getColumnDimension('K')->setWidth(15);
-//        $spreadsheet->getActiveSheet()->getColumnDimension('L')->setWidth(15);
-//        $spreadsheet->getActiveSheet()->getColumnDimension('M')->setWidth(15);
-//        $spreadsheet->getActiveSheet()->getColumnDimension('N')->setWidth(15);
-//        $spreadsheet->getActiveSheet()->getColumnDimension('O')->setWidth(15);
-//        $spreadsheet->getActiveSheet()->getColumnDimension('P')->setWidth(15);
-//        $spreadsheet->getActiveSheet()->getColumnDimension('Q')->setWidth(12);
-//        $spreadsheet->getActiveSheet()->getColumnDimension('R')->setWidth(12);
-//        $spreadsheet->getActiveSheet()->getColumnDimension('S')->setWidth(25);
-//        $spreadsheet->getActiveSheet()->getColumnDimension('T')->setWidth(25);
-//        $spreadsheet->getActiveSheet()->getColumnDimension('U')->setWidth(15);
-//        $spreadsheet->getActiveSheet()->getColumnDimension('V')->setWidth(15);
-//        $spreadsheet->getActiveSheet()->getColumnDimension('W')->setWidth(15);
-//        $spreadsheet->getActiveSheet()->getColumnDimension('X')->setWidth(15);
-//        $spreadsheet->getActiveSheet()->getColumnDimension('Y')->setWidth(15);
-//        $spreadsheet->getActiveSheet()->getColumnDimension('Z')->setWidth(15);
-//        $spreadsheet->getActiveSheet()->getColumnDimension('AA')->setWidth(15);
-//        $spreadsheet->getActiveSheet()->getColumnDimension('AB')->setWidth(15);
-//        $spreadsheet->getActiveSheet()->getColumnDimension('AC')->setWidth(15);
-//        $spreadsheet->getActiveSheet()->getColumnDimension('AD')->setWidth(15);
-//        /*Высота строк*/
-////		$spreadsheet->getActiveSheet()->getDefaultRowDimension()->setRowHeight(30);
-//
-//        /*Перенос по словам*/
-//        $spreadsheet->getActiveSheet()->getStyle('A' . $row_table_head . ':AD' . $row_table_head)
-//            ->getAlignment()->setWrapText(true);
-//        $row_table_head_two = $row_table_head + 1;
-//        $spreadsheet->getActiveSheet()->getStyle('A' . $row_table_head_two . ':AD' . $row_table_head_two)
-//            ->getAlignment()->setWrapText(true);
-//
-//
-//        /*Стиль Header A1 - X1*/
-//        $styleHeader = array(
-//            'font' => array(
-//                'italic' => true,
-//            ),
-//            'alignment' => array(
-//                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT,
-//                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-//            ),
-//        );
-//
-//        /*Стиль Header A2 - X4*/
-//        $styleHeaderAI = array(
-//            'font' => array(
-//                'bold' => true,
-//            ),
-//            'alignment' => array(
-//                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT,
-//                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-//            ),
-//        );
-//
-//        /*Стиль title*/
-//        $styleFootertitle = array(
-//            'font' => array(
-//                'size' => 10,
-//            ),
-//            'alignment' => array(
-//                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-//                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-//            ),
-//            'borders' => array(
-//                'allBorders' => array(
-//                    'style' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN
-//                )
-//            ),
-//            'fill' => array(
-//                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
-//                'color' => array(
-//                    'rgb' => 'C0C0C0')
-//            ),
-//        );
-//
-//        /*Стиль Title A1-X1*/
-//        $styleTitle = array(
-//            'font' => array(
-//                'bold' => true,
-//                'size' => 16
-//            ),
-//            'alignment' => array(
-//                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-//                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-//            ),
-//        );
-//
-//        /*Стиль BODY*/
-//        $styleBody = array(
-//            'alignment' => array(
-//                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-//                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-//            ),
-//            'borders' => array(
-//                'allBorders' => array(
-//                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN
-//                )
-//            ),
-//        );
-//
-//        /*Объединение ячеек*/
-//        $spreadsheet->getActiveSheet()->mergeCells('A1:AD1');
-//        $spreadsheet->getActiveSheet()->mergeCells('A2:AD2');
-//        $spreadsheet->getActiveSheet()->mergeCells('A3:AD3');
-//        $spreadsheet->getActiveSheet()->mergeCells('A4:AD4');
-//        $spreadsheet->getActiveSheet()->mergeCells('A5:AD5');
-//        $spreadsheet->getActiveSheet()->mergeCells('D' . $row_table_head . ':F' . $row_table_head);
-//        $spreadsheet->getActiveSheet()->mergeCells('U' . $row_table_head . ':V' . $row_table_head);
-//        $spreadsheet->getActiveSheet()->mergeCells('Z' . $row_table_head . ':AD' . $row_table_head);
-////		$spreadsheet->getActiveSheet()->getRowDimension('2')->setRowHeight(40);
-//        $spreadsheet->getActiveSheet()->getStyle('A5:AD5')->applyFromArray($styleTitle);
-//        $spreadsheet->getActiveSheet()->getStyle('A' . $row_start . ':AD' . $row_head)->applyFromArray($styleTitle);
-//
-//        /*Применение стиля к телу*/
-//        $sheet->getStyle('A' . $row_table_head . ':AD' . ($row_next))->applyFromArray($styleBody);
-//        $sheet->getStyle('A1:AD1')->applyFromArray($styleHeader);
-//        $sheet->getStyle('A2:AD2')->applyFromArray($styleHeaderAI);
-//        $sheet->getStyle('A3:AD3')->applyFromArray($styleHeaderAI);
-//        $sheet->getStyle('A4:AD4')->applyFromArray($styleHeaderAI);
-//        $sheet->getStyle('A' . $row_table_head . ':AD' . $row_table_head)->applyFromArray($styleFootertitle);
-//        $sheet->getStyle('A' . $row_table_head_merge . ':AD' . $row_table_head_merge)->applyFromArray($styleFootertitle);
-//        $sheet->getStyle('A' . $row_table_head_number . ':AD' . $row_table_head_number)->applyFromArray($styleFootertitle);
-//
-//        $writer = new Xlsx($spreadsheet);
-//
-//        $filename = 'Information on MTR';
-//
-//        header('Content-Type: application/vnd.ms-excel');
-//        header('Content-Disposition: attachment;filename="' . $filename . '.xlsx"');
-//        header('Cache-Control: max-age=0');
-//
-//        $writer->save('php://output'); // download file
+        $writer->save($guid.'.xlsx');
     }
 
     /*------------------------------------------------------------------------*/
@@ -4040,7 +4090,7 @@ class Main extends CI_Controller
             $this->load->model('Model_db');
             $result['filials'] = $this->Model_db->select_id_all_order($query_filials);
             $result['users'] = $this->Model_db->showUsers($query_users);
-//Отчет по наименованию МТР
+            //Отчет по наименованию МТР
             if (isset($_POST['button_search_name_mtr'])) {
                 $order['name_mtr'] = $this->input->post('name_mtr');
                 $order['name_filial'] = $this->input->post('name_filial');
@@ -4230,18 +4280,18 @@ class Main extends CI_Controller
                 }
 
 
-                //$this->load->view('template/view_header');
-                //$this->load->view('template/view_menu');
+                $this->load->view('template/view_header');
+                $this->load->view('template/view_menu');
                 $this->load->view('reports/view_report_motions', $result);
-                //$this->load->view('template/view_footer');
+                $this->load->view('template/view_footer');
                 $this->load->model('Model_db');
                 $this->Model_db->export_XLSX($result2);
             }
             else {
-               // $this->load->view('template/view_header');
-             //   $this->load->view('template/view_menu');
+                $this->load->view('template/view_header');
+                $this->load->view('template/view_menu');
                 $this->load->view('reports/view_report_motions', $result);
-               // $this->load->view('template/view_footer');
+                $this->load->view('template/view_footer');
             }
 
         } else {
@@ -4257,5 +4307,10 @@ class Main extends CI_Controller
         $this->load->view('template/view_menu');
         $this->load->view('view_manual');
         $this->load->view('template/view_footer');
+    }
+
+    function javascript()
+    {
+        $this->load->view('javascript');
     }
 }
