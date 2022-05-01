@@ -186,7 +186,7 @@
                                 <td><input style="font-size: 9pt;" name="cargo_motion[]" type="text" class="cargo_motion form-control input-block" value=""></td>
                                 <td><input style="font-size: 9pt;" name="tranzit_motion[]" type="text" class="tranzit_motion form-control input-block" value=""></td>
                                 <td><input style="font-size: 9pt;" name="shipped_motion[]" type="text" class="shipped_motion form-control input-block" value=""></td>
-                                <td><input style="font-size: 9pt;" name="remains_motion[]" type="text" class="remains_motion form-control input-block" value=""></td>
+                                <td><input style="font-size: 9pt;" name="remains_motion[]" type="text" class="remains_motion form-control input-block" value="" disabled></td>
                                 <td><input style="font-size: 9pt;" name="numberOverhead_motion[]" type="text" class="numberOverhead_motion form-control input-block" value=""></td>
                                 <td><div role="wrapper" class="gj-datepicker gj-datepicker-bootstrap gj-unselectable input-group"><input style="font-size: 9pt;" name="dateOverhead_motion[]" type="text" class="dateOverhead_motion form-control input-block date_order_id" value="" autocomplete="off" role="input"><span class="input-group-addon" role="right-icon"><span class="glyphicon glyphicon-calendar"></span></span></div></td>
                                 <td><textarea style="width:100%; height:30px; font-size: 9pt;" name="note_motion[]" class="form-control note_motion" ></textarea></td>

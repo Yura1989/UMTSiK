@@ -1,0 +1,62 @@
+table {
+    position: relative;
+    border-collapse: collapse;
+    font-size: 12px;
+    text-align: center;
+}
+
+thead th {
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #E9F0F2;
+}
+
+th {
+    border: 1px solid #000;
+    font-size: 14px;
+}
+
+td {
+    border: 1px solid #000;
+}
+
+.table {
+    display: table;
+    width: 100%;
+    border: 1px solid #000;
+}
+
+.tbody tr:nth-child(odd){
+    background-color: #F4F8F9;
+}
+
+.table__dimensions {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.table__options {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 2px;
+}
+
+.table__span {
+    font-size: 10px;
+    width: 55px
+}
+
+.table__input {
+    font-size: 12px;
+    border: 1px solid #ddd;
+}
+
+.table__text {
+    font-size: 10px;
+    margin: 0;
+    padding: 0;
+}

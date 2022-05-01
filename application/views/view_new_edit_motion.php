@@ -44,28 +44,50 @@
         <div class="content p-4">
             <div class="card mb-4">
                 <div class="card-header bg-white font-weight-bold">
-                    <h2 class="guid_motion id_motion" data-gid_motion="<?php foreach($info_motion as $item_motion): ?><?php if(isset($item_motion['number_motion'])) { echo($item_motion['number_motion']); } ?>"<?php endforeach ?> data-id_motion="<?php foreach($info_motion as $item_motion): ?><?php if(isset($item_motion['id_all_motion'])) { echo($item_motion['id_all_motion']); } ?>"<?php endforeach ?> >Информация о движении МТР на базе</h2>
+                    <h2 class="guid_motion id_motion" data-gid_motion="<?php foreach ($info_motion
+
+                    as $item_motion): ?><?php if (isset($item_motion['number_motion'])) {
+                        echo($item_motion['number_motion']);
+                    } ?>"<?php endforeach ?> data-id_motion="<?php foreach ($info_motion
+
+                    as $item_motion): ?><?php if (isset($item_motion['id_all_motion'])) {
+                        echo($item_motion['id_all_motion']);
+                    } ?>"<?php endforeach ?> >Информация о движении МТР на базе</h2>
                 </div>
                 <div class="card-body">
                     <p>
                         <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
                             Сформированна на основании:
                         </a>
-                        <a class="btn btn-info" href="<?=base_url();?>Main/motion_add_many?string_check=<?php if(isset($info_orders[0]['id_all_orders'])) { echo($info_orders[0]['id_all_orders']);} else { echo($info_orders[0]['id_all_orders']); }  ?>&guid_motion=<?php foreach($info_motion as $item_motion): ?><?php if(isset($item_motion['number_motion'])) { echo($item_motion['number_motion']); } ?>"<?php endforeach ?>" role="button">
-                            Множественная вставка значений
+                        <a class="btn btn-info"
+                           href="<?= base_url(); ?>Main/motion_add_many?string_check=<?php if (isset($info_orders[0]['id_all_orders'])) {
+                               echo($info_orders[0]['id_all_orders']);
+                           } else {
+                               echo($info_orders[0]['id_all_orders']);
+                           } ?>&guid_motion=<?php foreach ($info_motion
+
+                           as $item_motion): ?><?php if (isset($item_motion['number_motion'])) {
+                               echo($item_motion['number_motion']);
+                           } ?>"<?php endforeach ?>" role="button">
+                        Множественная вставка значений
                         </a>
                     </p>
                     <div class="collapse" id="collapseExample">
                         <div class="card card-body">
                             <ul>
-                                <?php foreach($info_orders as $item_orders): ?>
-                                    <li class="id_number_orders" data-id_order="<?php echo($item_orders['id_all_orders']); ?>">Распоряжения № <?php echo($item_orders['number_order']); ?> от <?php echo(date('d-m-Y', strtotime($item_orders['date_order']))); ?> </li>
+                                <?php foreach ($info_orders as $item_orders): ?>
+                                    <li class="id_number_orders"
+                                        data-id_order="<?php echo($item_orders['id_all_orders']); ?>">Распоряжения
+                                        № <?php echo($item_orders['number_order']); ?>
+                                        от <?php echo(date('d-m-Y', strtotime($item_orders['date_order']))); ?> </li>
                                 <?php endforeach; ?>
                             </ul>
                             <label for="author_order">Исполнитель</label>
                             <?php foreach($info_motion as $item_author): ?>
-                                <input type="text" class="form-control" id="author_order" name="author_order"  disabled
-                                       value="<?php if(isset($item_author['author_motion'])) { echo($item_author['author_motion']); } ?>"
+                                <input type="text" class="form-control" id="author_order" name="author_order" disabled
+                                       value="<?php if (isset($item_author['author_motion'])) {
+                                           echo($item_author['author_motion']);
+                                       } ?>"
                                 >
                             <?php endforeach ?>
                         </div>
@@ -547,7 +569,7 @@
         var arr8 = '<input style="font-size: 9pt;" name="cargo_motion[]" data-sum_mtr="' + sum_mtr + '" data-id_order_mtr="' + id_order_mtr + '" type="text" class="cargo_motion form-control input-block" value="">';
         var arr9 = '<input style="font-size: 9pt;" name="tranzit_motion[]" type="text" class="tranzit_motion form-control input-block" value="">';
         var arr10 = '<input style="font-size: 9pt;" name="shipped_motion[]" type="text" class="shipped_motion form-control input-block" value="">';
-        var arr11 = '<input style="font-size: 9pt;" name="remains_motion[]" type="text" class="remains_motion form-control input-block" value="">';
+        var arr11 = '<input style="font-size: 9pt;" name="remains_motion[]" type="text" class="remains_motion form-control input-block" value="" disabled>';
         var arr12 = '<input style="font-size: 9pt;" name="numberOverhead_motion[]" type="text" class="numberOverhead_motion form-control input-block" value="">';
         var arr13 = '<div role="wrapper" class="gj-datepicker gj-datepicker-bootstrap gj-unselectable input-group"><input style="font-size: 9pt;" name="dateOverhead_motion[]" type="text" class="dateOverhead_motion form-control input-block date_order_id" value="" autocomplete="off" role="input"><span class="input-group-addon" role="right-icon"><span class="glyphicon glyphicon-calendar"></span></span></div>';
         var arr14 = '<textarea style="width:100%; height:30px; font-size: 9pt;" name="note_motion[]" class="form-control note_motion" ></textarea>';
@@ -617,26 +639,28 @@
 //            b++;
 //        }
         while (a < length_codeMTR) {
-
             var sumMTR = Number(n_sumMTR[a].dataset.sum_mtr);                                           //общее кол-во необходимого отгрузить
             var shipped_motion = Number(document.getElementsByClassName('shipped_motion')[a].value);    //кол-во которое отгружаем
+            var remains_motion = Number(document.getElementsByClassName('remains_motion')[a].value);    //остаток
+            remains_motion = sumMTR - shipped_motion;
             console.log(sumMTR);
             console.log(shipped_motion);
-
             if (sumMTR >= shipped_motion) {
                 shipped_motion_class.eq(a).removeClass('is-invalid');
                 shipped_motion_class.eq(a).addClass('is-valid');
+                Number(document.getElementsByClassName('remains_motion')[a].value = remains_motion);
                 arr[arr.length] = 1;
             } else {
                 shipped_motion_class.eq(a).removeClass('is-valid');
                 shipped_motion_class.eq(a).addClass('is-invalid');
+                Number(document.getElementsByClassName('remains_motion')[a].value = remains_motion);
                 arr[arr.length] = 0;
             }
             a++;
         }
 
 //Итоги валидации
-//        console.log(arr);
+       console.log(arr);
         var search = arr.indexOf(0);
         if (search == -1){
 //            console.log("Good");
@@ -647,11 +671,10 @@
         }
     }
 
-
 //Сохранение изменения распоряжения с занесением в базу
     function saveEditMotion() {
-//        var check_validation = validation_form();
-        check_validation = 1;
+       var check_validation = validation_form();
+        console.log(check_validation);
         if (check_validation == 1 ){
             if (confirm ("Вы точно хотите сохранить внесенные изменения?")) {
                 /*Show and Hide кнопок управления*/
@@ -701,6 +724,8 @@
 /*формирование запроса к базе motion*/
                         var n = document.getElementsByClassName("cargo_motion");            //собираем всю информацию по элементу
                         var number_codeMTR = document.getElementsByClassName('cargo_motion').length; //считаем кол-во строк для добавления(изменения) в таблицы motion
+                        var test_number_codeMTR = document.getElementsByClassName('sum_mtr').length; //считаем кол-во строк для добавления(изменения) в таблицы motion
+                        console.log(test_number_codeMTR);
                         while (m < number_codeMTR) {
                             var length_motion = document.getElementsByClassName('length_motion')[m].value;
                             var width_motion = document.getElementsByClassName('width_motion')[m].value;
@@ -758,11 +783,10 @@
                 });
             }
         } else {
-            alert("Обнаружены ошибки при сохранении формы, исправте ошибки и попробуйте снова");
+            alert("Обнаружены ошибки при заполнении формы, исправьте ошибки и повторите еще раз");
         }
     }
-    
-    
+
 //Отмена последних изменений выход из режима редактирования информации о движении МТР
     function cancelEditMotion(){
 //GUID всего отчета "информаиця о движении МТР"
@@ -841,8 +865,9 @@
         $(".dateRequest_motion").prop("disabled", false);
         $(".dateShipments_motion").prop("disabled", false);
         $(".infoShipments_motion").prop("disabled", false);
+        $(".tranzit_motion").prop("disabled", false);
         $(".shipped_motion").prop("disabled", false);
-        $(".remains_motion").prop("disabled", false);
+        // $(".remains_motion").prop("disabled", false);
         $(".numberDateOverhead_motion").prop("disabled", false);
         $(".numberOverhead_motion").prop("disabled", false);
         $(".dateOverhead_motion").prop("disabled", false);

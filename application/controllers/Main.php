@@ -1038,6 +1038,7 @@ class Main extends CI_Controller
         $order['numberObjectMTR'] = json_decode(stripslashes(addslashes($this->input->post('numberObjectMTR'))));
         $order['sizeMTR'] = json_decode(stripslashes(addslashes($this->input->post('sizeMTR'))));
         $order['sumMTR'] = json_decode(stripslashes(addslashes($this->input->post('sumMTR'))));
+
         $order['filialMTR'] = json_decode(stripslashes(addslashes($this->input->post('filialMTR'))));
         $order['deliveryMTR'] = json_decode(stripslashes(addslashes($this->input->post('deliveryMTR'))));
         $order['noteMTR'] = json_decode(stripslashes(addslashes($this->input->post('noteMTR'))));
@@ -1477,7 +1478,7 @@ class Main extends CI_Controller
                 $result['orders_name'] = $this->Model_db->select_id_all_order($query_orders);
                 $result['author'] = $this->Model_db->select_id_all_order($query_author);
 
-                $this->load->view('view_new_motion', $result);
+                $this->load->view('view_motion_version3', $result);
             } else {
                 header("Location: create_motion");
             }
@@ -2039,7 +2040,7 @@ class Main extends CI_Controller
                 $query_motion = sprintf("SELECT * FROM motion m JOIN order_mtr o ON  m.id_bond_order_mtr=o.id_order WHERE m.guid_motion='%s' ORDER BY id_motion;", trim($result['info_motion'][0]['number_motion']));
                 $result['orders'] = $this->Model_db->select_id_all_order($query_motion);
                 $result['date_edit_motion'] = $this->Model_db->select_id_all_order($query_date);
-                $this->load->view('view_new_edit_motion', $result);
+                $this->load->view('view_new_edit_motion_version2', $result);
             } else {
                 $this->load->view('template/view_header');
                 $this->load->view('template/view_menu');
@@ -3900,6 +3901,20 @@ class Main extends CI_Controller
             $this->load->view('template/view_menu');
             $this->load->view('catalog/view_lpu', $result);
             $this->load->view('template/view_footer');
+        } else {
+            $this->load->view('template/view_header');
+            $this->load->view('view_auth');
+            $this->load->view('template/view_footer');
+        }
+    }
+
+//    Настройки
+    function settings ()
+    {
+        $_username = $this->session->userdata('username');
+        $_actions = $this->session->userdata('actions');
+        if (isset ($_username) && (($_actions['admin']) == 1)) {
+            $this->load->view('catalog/view_settings');
         } else {
             $this->load->view('template/view_header');
             $this->load->view('view_auth');

@@ -20,19 +20,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e434a0eb-fe8b-43bc-9337-ca38b788c424" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/views/App.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/views/Base.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/views/Base2.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/views/Base3.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/views/Base4.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/views/Prototype.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/views/javascript.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/views/catalog/view_settings.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/views/view_motion_version2.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/views/view_new_edit_motion_version2.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controllers/Main.php" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/Main.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/reports/view_report_motions.php" beforeDir="false" afterPath="$PROJECT_DIR$/views/reports/view_report_motions.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/views/template/view_menu.php" beforeDir="false" afterPath="$PROJECT_DIR$/views/template/view_menu.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/view_create_order.php" beforeDir="false" afterPath="$PROJECT_DIR$/views/view_create_order.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/view_motion_add_many.php" beforeDir="false" afterPath="$PROJECT_DIR$/views/view_motion_add_many.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/view_new_edit_motion.php" beforeDir="false" afterPath="$PROJECT_DIR$/views/view_new_edit_motion.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/view_new_motion.php" beforeDir="false" afterPath="$PROJECT_DIR$/views/view_new_motion.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/view_order.php" beforeDir="false" afterPath="$PROJECT_DIR$/views/view_order.php" afterDir="false" />
     </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -40,6 +40,54 @@
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="FileEditorManager">
+    <splitter split-orientation="horizontal" split-proportion="0.40276036">
+      <split-first>
+        <leaf>
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/controllers/Main.php">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="771">
+                  <caret line="1480" column="55" selection-start-line="1480" selection-start-column="55" selection-end-line="1480" selection-end-column="55" />
+                  <folding>
+                    <element signature="e#71#110#0#PHP" expanded="true" />
+                    <element signature="n#style#0;n#code#0;n#!!top" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/views/view_motion_version2.php">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="4743">
+                  <caret line="328" column="11" lean-forward="true" selection-start-line="328" selection-start-column="11" selection-end-line="328" selection-end-column="11" />
+                  <folding>
+                    <element signature="e#17306#17436#0#HTML" expanded="true" />
+                    <element signature="e#17494#20089#0#HTML" expanded="true" />
+                    <element signature="e#20176#28859#0#HTML" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf>
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/views/view_motion_version3.php">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="119">
+                  <caret line="7" column="69" selection-start-line="7" selection-start-column="63" selection-end-line="7" selection-end-column="69" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-second>
+    </splitter>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -50,7 +98,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>motion_add_many</find>
       <find>create_motion</find>
       <find>shipped_motion</find>
       <find>guid_motion</find>
@@ -80,16 +127,50 @@
       <find>report_motions</find>
       <find>show_motion</find>
       <find>button_search_filials</find>
+      <find>function motion</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/controllers/Main.php" />
+        <option value="$PROJECT_DIR$/views/view_motion_version3.php" />
+      </list>
+    </option>
+  </component>
   <component name="PhpServers">
     <servers />
   </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-10" />
+    <option name="y" value="-10" />
+    <option name="width" value="1940" />
+    <option name="height" value="1090" />
+  </component>
   <component name="ProjectId" id="1r1ZQn0U40Pt2HksLFNYUulqwph" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="application" type="b2602c69:ProjectViewProjectNode" />
+              <item name="application" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -98,20 +179,32 @@
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="editor.config.ad.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/views" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/.." />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Server\data\htdocs\mtr\application\views" />
-      <recent name="C:\Server\data\htdocs\ampmtr\application\views" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Server\data\htdocs\mtr\application\views\it" />
       <recent name="C:\Server\data\htdocs\mtr\application\views\it\template_it" />
     </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Server\data\htdocs\mtr\application\views" />
+      <recent name="C:\Server\data\htdocs\ampmtr\application\views" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
   </component>
   <component name="RunManager">
     <configuration name="python" type="PythonConfigurationType" factoryName="Python" temporary="true">
@@ -146,7 +239,7 @@
       <method v="2" />
     </configuration>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SpellCheckerSettings" BundledDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -223,11 +316,42 @@
       <workItem from="1618375822205" duration="12710000" />
       <workItem from="1618481552726" duration="862000" />
       <workItem from="1618482457872" duration="79000" />
+      <workItem from="1642268625318" duration="11000" />
+      <workItem from="1649953547522" duration="13000" />
+      <workItem from="1649953561663" duration="2395000" />
     </task>
     <servers />
   </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="2419000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-7" y="-7" width="2766" height="1126" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info content_ui="combo" id="Project" order="0" weight="0.13117732" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Database Changes" order="8" />
+      <window_info anchor="bottom" id="Version Control" order="9" />
+      <window_info anchor="bottom" id="Terminal" order="10" />
+      <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Database" order="3" />
+    </layout>
+  </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="3" />
+    <option name="version" value="1" />
   </component>
   <component name="UnknownFeatures">
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.php" />
@@ -237,12 +361,32 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="RECENTLY_FILTERED_USER_GROUPS">
+                <collection />
+              </option>
+              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+                <collection />
+              </option>
+            </State>
           </value>
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list />
+          </value>
+        </entry>
+        <entry key="User">
+          <value>
+            <list />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="Vcs.Log.UiProperties">
     <option name="RECENTLY_FILTERED_USER_GROUPS">
@@ -270,5 +414,37 @@
       <screen x="0" y="0" width="2752" height="1112" />
     </state>
     <state x="885" y="201" key="SettingsEditor/0.0.2752.1112/3440.0.1920.1040@0.0.2752.1112" timestamp="1618147911191" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/views/view_motion_version2.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4743">
+          <caret line="328" column="11" lean-forward="true" selection-start-line="328" selection-start-column="11" selection-end-line="328" selection-end-column="11" />
+          <folding>
+            <element signature="e#17306#17436#0#HTML" expanded="true" />
+            <element signature="e#17494#20089#0#HTML" expanded="true" />
+            <element signature="e#20176#28859#0#HTML" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/controllers/Main.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="771">
+          <caret line="1480" column="55" selection-start-line="1480" selection-start-column="55" selection-end-line="1480" selection-end-column="55" />
+          <folding>
+            <element signature="e#71#110#0#PHP" expanded="true" />
+            <element signature="n#style#0;n#code#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/view_motion_version3.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="69" selection-start-line="7" selection-start-column="63" selection-end-line="7" selection-end-column="69" />
+        </state>
+      </provider>
+    </entry>
   </component>
 </project>

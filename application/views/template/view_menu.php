@@ -189,6 +189,9 @@
                                     <li>
                                         <a href="<?=base_url();?>main/departments">Отделы(группы)</a>
                                     </li>
+                                    <li>
+                                        <a href="<?=base_url();?>main/settings">Настройки</a>
+                                    </li>
                                 </ul>
                             </li>
 

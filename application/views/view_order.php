@@ -147,7 +147,8 @@
                             <th style="width: 5%;">Объект</th>
                             <th style="width: 7%;">Инвентарный номер </br> объекта</th>
                             <th style="width: 5%;">Ед.изм.</th>
-                            <th style="width: 5%;">Кол-во</th>
+                            <th style="width: 5%;" data-toggle="tooltip"  data-placement="left" data-html="true"
+                                data-original-title="Кол-во необходим указывать в целых или дробных значениях (Пример: целое - 34, дробное - 34.3)">Кол-во</th>
                             <th style="width: 10%;">Филиал</th>
                             <th style="width: 5%;" data-toggle="tooltip"  data-placement="left" data-html="true"
                                 data-original-title="Режим доставки МТР:</br>
@@ -336,7 +337,8 @@
                             <th style="width: 5%;">Объект</th>
                             <th style="width: 7%;">Инвентарный номер </br> объекта</th>
                             <th style="width: 5%;">Ед.изм.</th>
-                            <th style="width: 5%;">Кол-во</th>
+                            <th style="width: 5%;" data-toggle="tooltip"  data-placement="left" data-html="true"
+                                data-original-title="Кол-во необходим указывать в целых или дробных значениях (Пример: целое - 34, дробное - 34.3)" >Кол-во</th>
                             <th style="width: 10%;">Филиал</th>
                             <th style="width: 5%;" data-toggle="tooltip"  data-placement="left" data-html="true"
                                 data-original-title="Режим доставки МТР:</br>
@@ -492,7 +494,8 @@
                         <th style="width: 5%;">Объект</th>
                         <th style="width: 7%;">Инвентарный номер </br> объекта</th>
                         <th style="width: 5%;">Ед.изм.</th>
-                        <th style="width: 5%;">Кол-во</th>
+                        <th style="width: 5%;" data-toggle="tooltip"  data-placement="left" data-html="true"
+                            data-original-title="Кол-во необходим указывать в целых или дробных значениях (Пример: целое - 34, дробное - 34.3)</font>">Кол-во</th>
                         <th style="width: 10%;">Филиал</th>
                         <th style="width: 5%;" data-toggle="tooltip"  data-placement="left" data-html="true"
                             data-original-title="Режим доставки МТР:</br>
@@ -699,7 +702,6 @@
         }
     }
 
-//Валидация форм
     function validation_form() {
         var arr = []; //Счетчик ошибок при заполнении формы
 //Валидация Примечания
@@ -710,6 +712,7 @@
             var number_noteMTR = noteMTR_element.eq(a).val();
             var deliveryMTR_element = $('.deliveryMTR');
             var number_deliveryMTR = deliveryMTR_element.eq(a).val();
+
             if (number_deliveryMTR == 'Плановый') {
                 noteMTR_element.eq(a).removeClass('is-invalid');
                 deliveryMTR_element.eq(a).removeClass('is-invalid');
@@ -756,6 +759,28 @@
                 }
                 b++;
             }
+//Валидация Кол-ва МТР
+        var length_sumMTR = document.getElementsByClassName('sumMTR').length;
+        console.log(length_sumMTR);
+        var c = 0;
+        while (c < length_sumMTR) {
+            var sumMTR_element = $('.sumMTR');
+            var JSsumMTR = document.getElementsByClassName('sumMTR')[c].value;
+            console.log(JSsumMTR);
+            var sumMTR = sumMTR_element.eq(c).val();
+            console.log("Количество-" + sumMTR);
+            var parse_sumMTR = parseFloat(sumMTR);
+            console.log("Функция parseFloat-" + parse_sumMTR);
+            if (parse_sumMTR == sumMTR) {
+                sumMTR_element.eq(c).removeClass('is-invalid');
+                sumMTR_element.eq(c).addClass('is-valid');
+                arr[arr.length] = 1;
+            } else {
+                sumMTR_element.eq(c).addClass('is-invalid');
+                arr[arr.length] = 0;
+            }
+            c++;
+        }
 //Итоги валидации
         console.log(arr);
         var search = arr.indexOf(0);
@@ -809,6 +834,7 @@
                     var JSdeliveryMTR = document.getElementsByClassName('deliveryMTR')[m].value;
                     var JSnoteMTR = document.getElementsByClassName('noteMTR')[m].value;
                     console.log(JSnameMTR);
+                    console.log(JSsumMTR);
                     massive_JScodeMTR.push(JScodeMTR);
                     massive_JSnumberPartMTR.push(JSnumberPartMTR);
                     massive_JSnameMTR.push(JSnameMTR);
@@ -963,7 +989,7 @@
                         },
                         success: function (data) {
                             console.log(data);
-                            window.location = "<?=base_url();?>Main/formation_order?id_all_order=" + JSid_orderMTR;
+                            //window.location = "<?//=base_url();?>//Main/formation_order?id_all_order=" + JSid_orderMTR;
                         }
                     });
                     m++;

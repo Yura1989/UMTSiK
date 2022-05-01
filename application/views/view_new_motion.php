@@ -157,7 +157,7 @@
                 <table class="motion_table compact table table-bordered table-hover table-sm" style="width:100%">
                     <thead>
                     <tr class="text-center" style="font-size: 8pt;">
-                        <th colspan="3" rowspan="1" style="width: 15%;" data-toggle="tooltip"  data-placement="left" data-html="true"
+                        <th colspan="3" rowspan="1" style="" data-toggle="tooltip"  data-placement="left" data-html="true"
                             data-original-title="Указывается представителем базы или участка погрузочно-разгрузочных работ по запросу перевозчика">Массогабаритные характеристики***</th>
                         <th rowspan="2" >вес 1 ед. тн.</th>
                         <th rowspan="2" >Всего тн.</th>
@@ -336,47 +336,54 @@
     function validation_form() {
         var arr = []; //Счетчик ошибок при заполнении формы
 //Валидация Примечания
-        var length_codeMTR = document.getElementsByClassName('cargo_motion').length;
         var a = 0; //счетчик строк
-        // var b = 0; //счетчик МТР
+        var b = 0; //счетчик МТР
+        var number_row = document.getElementsByClassName('shipped_motion').length;
+        while (a < number_row) {
+            var number_row_a = document.getElementsByClassName('shipped_motion')[a].value;
+            console.log('Строка ' + a + ' значение -'+number_row_a);
+            a++;
+        }
+
         // var n_sumMTR = document.getElementsByClassName("sum_mtr"); //собираем всю инфу с элемента с классом sum_mtr
-        // var length_sum_mtr = document.getElementsByClassName('sum_mtr').length; //общее кол-во строк МТР
-        // console.log('mtr-'+length_sum_mtr);
-        // console.log('row-'+length_codeMTR);
+        var length_sum_mtr = document.getElementsByClassName('sum_mtr').length; //общее кол-во строк МТР
+        // var length_shipped_morions = document.getElementsByClassName('shipped_motion').length;
+        // console.log('length_shipped_morions- '+length_shipped_morions);
+        // console.log(typeof n_sumMTR);
+        console.log('Кол-во позиций-'+length_sum_mtr);
+        console.log('Кол-во добавленных строк-'+length_codeMTR);
         // var shipped_motion_class = $('.shipped_motion');
-       // while (b < length_sum_mtr) {
-       //     var sum_mtr = document.getElementsByClassName('sum_mtr')[b].value;
-       //     console.log('Всего необход отгрузить_test-'+sum_mtr);
-       //     b++;
-       // }
-        // while (a < length_codeMTR) {
-        //     var sumMTR = document.getElementsByClassName('sum_mtr')[a].value;  //общее кол-во необходимого отгрузить
-        //     var shipped_motion_test = Number(document.getElementsByClassName('shipped_motion')[a]);    //кол-во которое отгружаем
-        //     console.log("Всего необход отгрузить-"+sumMTR);
-        //     console.log("Кол-во отгружаемого-"+shipped_motion_test);
+        while (b < length_sum_mtr) {
+           var code_mtr = document.getElementsByClassName('code_mtr_class')[b].value;
+           console.log('Код МТР-'+code_mtr);
+           if (typeof (document.getElementsByClassName('remains_motion')[b]) !== 'undefined') {
+               shipped_motion_class.eq(a).removeClass('is-invalid');
+               shipped_motion_class.eq(a).addClass('is-valid');
+           }
+        b++;
+        }
+        // while (a < length_shipped_morions) {
+        //     var sumMTR = Number(n_sumMTR[a].dataset.sum_mtr);                                           //общее кол-во необходимого отгрузить
+        //     var shipped_motion = Number(document.getElementsByClassName('shipped_motion')[a].value);    //кол-во которое отгружаем
+        //     var remains_motion = Number(document.getElementsByClassName('remains_motion')[a].value);    //остаток
+        //     remains_motion = sumMTR - shipped_motion;
         //
-        //     if (sumMTR >= shipped_motion_test) {
+        //     console.log("Кол-во которое необходим увезти-" + sumMTR);
+        //     console.log("Кол-во которое увозим-" + shipped_motion);
+        //     console.log("Остаток-" + remains_motion);
+        //     if (sumMTR >= shipped_motion) {
         //         shipped_motion_class.eq(a).removeClass('is-invalid');
         //         shipped_motion_class.eq(a).addClass('is-valid');
+        //         Number(document.getElementsByClassName('remains_motion')[a].value = remains_motion);
         //         arr[arr.length] = 1;
         //     } else {
         //         shipped_motion_class.eq(a).removeClass('is-valid');
         //         shipped_motion_class.eq(a).addClass('is-invalid');
+        //         Number(document.getElementsByClassName('remains_motion')[a].value = remains_motion);
         //         arr[arr.length] = 0;
         //     }
         //     a++;
         // }
-        while (a < length_codeMTR) {
-            // var shipped_motion = document.getElementsByClassName('shipped_motion')[a].value;    //проверка на добавления хотя бы одной строки
-            console.log("Строка равна"+add_info);
-            // console.log("Строка равна"+shipped_motion);
-            if ((add_info == 1) ) {
-                arr[arr.length] = 1;
-            } else {
-                arr[arr.length] = 0;
-            }
-            a++;
-        }
 
 //Итоги валидации
        console.log(arr);
@@ -394,112 +401,138 @@
     //Сохранение информации о движении с занесением в базу
     function saveMotion() {
        var check_validation = validation_form();
-        // check_validation = 1;
+        // var check_validation = 1;
         if (check_validation == 1 ){
-            if (confirm("Вы точно хотите сохранить данные?")) {
-//GUID всего отчета "информаиця о движении МТР"
-                var id_guid = document.getElementsByClassName("guid_motion");
-                var guid = id_guid[0].dataset.id_motion;
-                console.log(guid);
-//GUID для строки внутри отчета "информаиця о движении МТР"
-                var id_bond_guid_motion_date = document.getElementsByClassName("code_mtr_class");
-                var guid_bond_guid_motion_date = id_bond_guid_motion_date[0].dataset.bond_guid_motion_date; //GUID строки для удобства следующего поиска
-//                console.log(guid_bond_guid_motion_date);
-                var m = 0;
-/*формирование запроса к базе all_motion*/
-                $.ajax({
-                    url : "<?=base_url();?>Main/saveAllMotion",
-                    type: "POST",
-                    data: {
-                        guid : guid
-                    },
-                    success: function (data_id_all_motion) {
-                        console.log(data_id_all_motion); // id с таблицы all_motion (id всего отчета)
-                                                
-/*формирование запроса к базе motion*/
-                        var n = document.getElementsByClassName("cargo_motion"); //находим элемента в классе которого есть информация об id из таблицы order_mtr
-                        var n_sumMTR = document.getElementsByClassName("cargo_motion");
-                        var n_sumMTR_length = document.getElementsByClassName("cargo_motion").length;
-//                        console.log(n_sumMTR_length);
-                        var number_codeMTR = document.getElementsByClassName('cargo_motion').length; //считаем кол-во строк для добавления в базу
-                        console.log(number_codeMTR);
-                        while (m < number_codeMTR) {
-                                var length_motion = document.getElementsByClassName('length_motion')[m].value;
-                                var width_motion = document.getElementsByClassName('width_motion')[m].value;
-                                var height_motion = document.getElementsByClassName('height_motion')[m].value;
-                                var weight_motion = document.getElementsByClassName('weight_motion')[m].value;
-                                var total_motion = document.getElementsByClassName('total_motion')[m].value;
-                                var dateRequest_motion = document.getElementsByClassName('dateRequest_motion')[m].value;
-                                var infoShipments_motion = document.getElementsByClassName('infoShipments_motion')[m].value;
-                                var dateShipments_motion = document.getElementsByClassName('dateShipments_motion')[m].value;
-                                var cargo_motion = document.getElementsByClassName('cargo_motion')[m].value;
-                                var tranzit_motion = document.getElementsByClassName('tranzit_motion')[m].value;
-                                var shipped_motion = document.getElementsByClassName('shipped_motion')[m].value;
-                                var remains_motion = document.getElementsByClassName('remains_motion')[m].value;
-                                var numberOverhead_motion = document.getElementsByClassName('numberOverhead_motion')[m].value;
-                                var dateOverhead_motion = document.getElementsByClassName('dateOverhead_motion')[m].value;
-                                var note_motion = document.getElementsByClassName('note_motion')[m].value;
-                                var sumMTR = n_sumMTR[m].dataset.sum_mtr;
-                                var number_id_order_mtr = n[m].dataset.id_order_mtr; //из data-id_order_mtr забирают информацию об id из таблицы order_mtr
-                                $.ajax({
-                                    url: "<?=base_url();?>Main/saveMotion",
-                                    type: "POST",
-                                    data: {
-                                        length_motion: length_motion,
-                                        width_motion: width_motion,
-                                        height_motion: height_motion,
-                                        weight_motion: weight_motion,
-                                        total_motion: total_motion,
-                                        cargo_motion: cargo_motion,
-                                        dateRequest_motion: dateRequest_motion,
-                                        dateShipments_motion: dateShipments_motion,
-                                        infoShipments_motion: infoShipments_motion,
-                                        tranzit_motion: tranzit_motion,
-                                        shipped_motion: shipped_motion,
-                                        sumMTR: sumMTR,
-                                        remains_motion: remains_motion,
-                                        numberOverhead_motion: numberOverhead_motion,
-                                        dateOverhead_motion: dateOverhead_motion,
-                                        note_motion: note_motion,
-                                        number_id_order_mtr: number_id_order_mtr,               //id из таблицы order_mtr
-                                        id_bond_all_motion: data_id_all_motion,                 //id с таблицы all_motion (id всего отчета)
-                                        guid: guid,                                             //GUID всего отчета "информаиця о движении МТР"
-                                        guid_bond_guid_motion_date: guid_bond_guid_motion_date
-                                    },
-                                    success: function (data) {
-                                        console.log(data);
-                                        window.location = "<?=base_url();?>Main/edit_motion?guid=" + guid;
-                                    }
-                                });
-                                m++;
-                        }
-                        if (number_codeMTR == 0) {
-                            window.location = "<?=base_url();?>Main/edit_motion?guid=" + guid;
-                        }
+            // ----------------------------------------------
+            // Тестовая хрень, потом можно удалить
+            var m = 0;
+            var number_codeMTR = document.getElementsByClassName('cargo_motion').length; //считаем кол-во строк для добавления в базу
+            if (add_info == 0) {
+                console.log("Нет добавленных строк")
+            } else {
+                console.log("Кол-во позиций МТР-" + number_codeMTR);
+                while (m < number_codeMTR) {
+                    if (typeof (document.getElementsByClassName('remains_motion')[m]) !== 'undefined') {
+                        var remains_motion = document.getElementsByClassName('remains_motion')[m].value;
+                        console.log("По позиции № "+ m +" необходимо додоставить: " + remains_motion);
+                    } else {
+                        remains_motion = 0;
+                        console.log("По позиции № "+ m +" необходимо додоставить: " + remains_motion);
+                        // console.log("Переменная remains_motion не существует, ее номер - " + m)
                     }
-                });
-/*формирование запроса к базе all_orders*/
-                var check_orders = 0;
-                var number_orders = document.getElementsByClassName('id_number_orders').length;
-                var n_orders = document.getElementsByClassName("id_number_orders");
-                while (check_orders < number_orders) {
-                    var number_id_order = n_orders[check_orders].dataset.id_order;
-                    $.ajax({
-                        url : "<?=base_url();?>Main/saveGUIDAllMotionInOrders",
-                        type: "POST",
-                        data: {
-                            guid : guid,
-                            id_order : number_id_order
-                        },
-                        success: function (data) {
-//                            console.log(data);
-                        }
-                    });
-                    check_orders++;
+                m++;
                 }
+
             }
+
+            // ----------------------------------------------
+
+//            if (confirm("Вы точно хотите сохранить данные?")) {
+////GUID всего отчета "информаиця о движении МТР"
+//                var id_guid = document.getElementsByClassName("guid_motion");
+//                var guid = id_guid[0].dataset.id_motion;
+//                console.log(guid);
+////GUID для строки внутри отчета "информаиця о движении МТР"
+//                var id_bond_guid_motion_date = document.getElementsByClassName("code_mtr_class");
+//                var guid_bond_guid_motion_date = id_bond_guid_motion_date[0].dataset.bond_guid_motion_date; //GUID строки для удобства следующего поиска
+////                console.log(guid_bond_guid_motion_date);
+//                var m = 0;
+///*формирование запроса к базе all_motion*/
+//                $.ajax({
+//                    url : "<?//=base_url();?>//Main/saveAllMotion",
+//                    type: "POST",
+//                    data: {
+//                        guid : guid
+//                    },
+//                    success: function (data_id_all_motion) {
+//                        console.log(data_id_all_motion); // id с таблицы all_motion (id всего отчета)
+//
+///*формирование запроса к базе motion*/
+//                        var n = document.getElementsByClassName("cargo_motion"); //находим элемента в классе которого есть информация об id из таблицы order_mtr
+//                        var n_sumMTR = document.getElementsByClassName("cargo_motion");
+//                        var n_sumMTR_length = document.getElementsByClassName("cargo_motion").length;
+////                        console.log(n_sumMTR_length);
+//                        var test_number_codeMTR = document.getElementsByClassName('sum_mtr').length; //считаем кол-во строк для добавления(изменения) в таблицы motion
+//                        console.log("test"+test_number_codeMTR);
+//                        var number_codeMTR = document.getElementsByClassName('cargo_motion').length; //считаем кол-во строк для добавления в базу
+//                        console.log(number_codeMTR);
+//                        while (m < number_codeMTR) {
+//                                var length_motion = document.getElementsByClassName('length_motion')[m].value;
+//                                var width_motion = document.getElementsByClassName('width_motion')[m].value;
+//                                var height_motion = document.getElementsByClassName('height_motion')[m].value;
+//                                var weight_motion = document.getElementsByClassName('weight_motion')[m].value;
+//                                var total_motion = document.getElementsByClassName('total_motion')[m].value;
+//                                var dateRequest_motion = document.getElementsByClassName('dateRequest_motion')[m].value;
+//                                var infoShipments_motion = document.getElementsByClassName('infoShipments_motion')[m].value;
+//                                var dateShipments_motion = document.getElementsByClassName('dateShipments_motion')[m].value;
+//                                var cargo_motion = document.getElementsByClassName('cargo_motion')[m].value;
+//                                var tranzit_motion = document.getElementsByClassName('tranzit_motion')[m].value;
+//                                var shipped_motion = document.getElementsByClassName('shipped_motion')[m].value;
+//                                var remains_motion = document.getElementsByClassName('remains_motion')[m].value;
+//                                var numberOverhead_motion = document.getElementsByClassName('numberOverhead_motion')[m].value;
+//                                var dateOverhead_motion = document.getElementsByClassName('dateOverhead_motion')[m].value;
+//                                var note_motion = document.getElementsByClassName('note_motion')[m].value;
+//                                var sumMTR = n_sumMTR[m].dataset.sum_mtr;
+//                                var number_id_order_mtr = n[m].dataset.id_order_mtr; //из data-id_order_mtr забирают информацию об id из таблицы order_mtr
+//                                //$.ajax({
+//                                //    url: "<?////=base_url();?>////Main/saveMotion",
+//                                //    type: "POST",
+//                                //    data: {
+//                                //        length_motion: length_motion,
+//                                //        width_motion: width_motion,
+//                                //        height_motion: height_motion,
+//                                //        weight_motion: weight_motion,
+//                                //        total_motion: total_motion,
+//                                //        cargo_motion: cargo_motion,
+//                                //        dateRequest_motion: dateRequest_motion,
+//                                //        dateShipments_motion: dateShipments_motion,
+//                                //        infoShipments_motion: infoShipments_motion,
+//                                //        tranzit_motion: tranzit_motion,
+//                                //        shipped_motion: shipped_motion,
+//                                //        sumMTR: sumMTR,
+//                                //        remains_motion: remains_motion,
+//                                //        numberOverhead_motion: numberOverhead_motion,
+//                                //        dateOverhead_motion: dateOverhead_motion,
+//                                //        note_motion: note_motion,
+//                                //        number_id_order_mtr: number_id_order_mtr,               //id из таблицы order_mtr
+//                                //        id_bond_all_motion: data_id_all_motion,                 //id с таблицы all_motion (id всего отчета)
+//                                //        guid: guid,                                             //GUID всего отчета "информаиця о движении МТР"
+//                                //        guid_bond_guid_motion_date: guid_bond_guid_motion_date
+//                                //    },
+//                                //    success: function (data) {
+//                                //        console.log(data);
+//                                //        window.location = "<?////=base_url();?>////Main/edit_motion?guid=" + guid;
+//                                //    }
+//                                //});
+//                                m++;
+//                        }
+//                        if (number_codeMTR == 0) {
+//                            window.location = "<?//=base_url();?>//Main/edit_motion?guid=" + guid;
+//                        }
+//                    }
+//                });
+///*формирование запроса к базе all_orders*/
+//                var check_orders = 0;
+//                var number_orders = document.getElementsByClassName('id_number_orders').length;
+//                var n_orders = document.getElementsByClassName("id_number_orders");
+//                while (check_orders < number_orders) {
+//                    var number_id_order = n_orders[check_orders].dataset.id_order;
+//                    $.ajax({
+//                        url : "<?//=base_url();?>//Main/saveGUIDAllMotionInOrders",
+//                        type: "POST",
+//                        data: {
+//                            guid : guid,
+//                            id_order : number_id_order
+//                        },
+//                        success: function (data) {
+////                            console.log(data);
+//                        }
+//                    });
+//                    check_orders++;
+//                }
+//            }
         } else {
-            alert("Добавте хотя бы одно значения для МТР и попробуйте снова");
+            alert("Обнаружены ошибки при заполнении формы, исправьте ошибки и повторите еще раз");
         }
     }
     
@@ -553,7 +586,7 @@
         var arr8 = '<input style="font-size: 9pt;" name="cargo_motion[]" data-sum_mtr="' + sum_mtr + '" data-id_order_mtr="' + id_order_mtr + '" type="text" class="cargo_motion form-control input-block" value="">';
         var arr9 = '<input style="font-size: 9pt;" name="tranzit_motion[]" type="text" class="tranzit_motion form-control input-block" value="">';
         var arr10 = '<input style="font-size: 9pt;" name="shipped_motion[]" type="text" class="shipped_motion form-control input-block" value="">';
-        var arr11 = '<input style="font-size: 9pt;" name="remains_motion[]" type="text" disabled class="remains_motion form-control input-block" value="">';
+        var arr11 = '<input style="font-size: 9pt;" name="remains_motion[]" type="text" disabled class="remains_motion form-control input-block" value="" >';
         var arr12 = '<input style="font-size: 9pt;" name="numberOverhead_motion[]" type="text" class="numberOverhead_motion form-control input-block" value="">';
         var arr13 = '<div role="wrapper" class="gj-datepicker gj-datepicker-bootstrap gj-unselectable input-group"><input style="font-size: 9pt;" name="dateOverhead_motion[]" type="text" class="dateOverhead_motion form-control input-block date_order_id" value="" autocomplete="off" role="input"><span class="input-group-addon" role="right-icon"><span class="glyphicon glyphicon-calendar"></span></span></div>';
         var arr14 = '<textarea style="width:100%; height:30px; font-size: 9pt;" name="note_motion[]" class="form-control note_motion" ></textarea>';
@@ -576,7 +609,7 @@
         row_data.splice(14, 1, arr14);
         row_data.splice(18, 1, arr18);
 
-        table.eq(id_row_table).row.add(row_data).draw(true);
+        table.eq(let).row.add(row_data).draw(true);
         //Вывод даты
         date_row();
     }
