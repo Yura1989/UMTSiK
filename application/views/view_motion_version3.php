@@ -36,15 +36,177 @@
                 <thead>
                     <tr>
                         <th># п/п</th>
-                        <th>МТР</th>
-                        <th>Количество/ед.изм</th>
+                        <th>Код МТР</th>
+                        <th>Номер партии</th>
+                        <th>Наименование МТР</th>
                         <th>Объект</th>
-                        <th>Массогобаритные характеристики***</th>
-                        <th>Заявка на контейнер/автотранспорт</th>
+                        <th>Инвентарный номер объекта</th>
+                        <th>Единицы измерений</th>
+                        <th>Количество</th>
+                        <th>Филиал</th>
                         <th>Операции</th>
+                    </tr>
+                    <tr>
+                        <th>1</th>
+                        <th>2</th>
+                        <th>3</th>
+                        <th>4</th>
+                        <th>5</th>
+                        <th>6</th>
+                        <th>7</th>
+                        <th>8</th>
+                        <th>9</th>
+                        <th>10</th>
                     </tr>
                 </thead>
                 <tbody class="tbody">
+                    <div>
+                        <tr>
+                            <td>1</td>
+                            <td>32</td>
+                            <td>232</td>
+                            <td>труба № 2</td>
+                            <td>ПЭН</td>
+                            <td>23</td>
+                            <td>ШТ</td>
+                            <td>6</td>
+                            <td>Краснотуринское ЛПУ МГ</td>
+                            <td>
+                                <button type="button" data-id="e1e1e1e1e1e1" name="table_add_row" class="table__button table__button_add_row">+</button>
+                                <button>Удалить</button>
+                            </td>
+                        </tr>
+                        <tr class="e1e1e1e1e1e1">
+                            <td colspan="9">
+                                <div class="table__fieldset">
+                                    <fieldset>
+                                        <legend>Массогобаритные характеристики</legend>
+                                        <div class="table__dimensions">
+                                            <div class="table__options">
+                                                <span class="table__span">Длина, м</span>
+                                                <input class="table__input"></input>
+                                            </div>
+                                            <div class="table__options">
+                                                <span class="table__span">Ширина, м</span>
+                                                <input class="table__input"></input>
+                                            </div>
+                                            <div class="table__options">
+                                                <span class="table__span">Высота, м</span>
+                                                <input class="table__input"></input>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                    <fieldset>
+                                        <legend>Заявки на отгрузку</legend>
+                                        <div class="table__options">
+											<span class="table__span">Дата заявки на отгрузку</span>
+                                            <input class="table__input"></input>
+                                        </div>
+										
+										<div class="table__options">
+											<span class="table__span">Заявка на контейнер/автотранспорт</span>
+                                            <input class="table__input"></input>
+                                        </div>
+                                    </fieldset>
+                                    <fieldset>
+                                        <legend>Дата отгрузки</legend>
+                                        <div class="table__options">
+                                            <input class="table__input"></input>
+                                        </div>
+                                    </fieldset>
+                                    <fieldset>
+                                        <legend>Груз сформирован в контейнер/автотранспорт</legend>
+                                        <div class="table__options">
+                                            <input class="table__input"></input>
+                                        </div>
+                                    </fieldset>
+                                    <fieldset>
+                                        <legend>Отгружено</legend>
+                                        <div class="table__options">
+                                            <input class="table__input"></input>
+                                        </div>
+                                    </fieldset>
+                                    <fieldset>
+                                        <legend>Остаток</legend>
+                                        <div class="table__options">
+                                            <input class="table__input"></input>
+                                        </div>
+                                    </fieldset>
+                                    <fieldset>
+                                        <legend>Наименование транзитного* или конечного получателя груза</legend>
+                                        <div class="table__options">
+                                            <input class="table__input"></input>
+                                        </div>
+                                    </fieldset>
+                                    <fieldset>
+                                        <legend>Накладная формы М11</legend>
+                                        <div class="table__options">
+                                            <input class="table__input"></input>
+                                        </div>
+                                    </fieldset>
+                                    <fieldset>
+                                        <legend>Примечание по доставке</legend>
+                                        <div class="table__options">
+                                            <input class="table__input"></input>
+                                        </div>
+                                    </fieldset>
+                                    <fieldset>
+                                        <legend>Общие примечания</legend>
+                                        <div class="table__options">
+                                            <input class="table__input"></input>
+                                        </div>
+                                    </fieldset>
+                                    <fieldset>
+                                        <legend>Заполняется транзитным участком, базой ЮУМТСиК</legend>
+                                        <div class="table__dimensions">
+                                            <div class="table__options">
+                                                <span class="table__span">Дата поступления МТР на базу, участок</span>
+                                                <input class="table__input"></input>
+                                            </div>
+                                            <div class="table__options">
+                                                <span class="table__span">№ накладной М 15</span>
+                                                <input class="table__input"></input>
+                                            </div>
+                                            <div class="table__options">
+                                                <span class="table__span">Дата накладной М 15</span>
+                                                <input class="table__input"></input>
+                                            </div>
+                                            <div class="table__options">
+                                                <span class="table__span">Дата получения МТР филиалом получателя</span>
+                                                <input class="table__input"></input>
+                                            </div>
+                                            <div class="table__options">
+                                                <span class="table__span">Принято, кол-во</span>
+                                                <input class="table__input">
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            <td>
+                                <button type="button" data-id="e1e1e1e1e1e1" name="table_add_row" class="table__button table__button_add_row">+</button>
+                                <button>Удалить</button>
+                            </td>
+                        </tr>
+                    </div>
+
+
+                    <tr>
+                        <td>1</td>
+                        <td>32</td>
+                        <td>232</td>
+                        <td>труба № 2</td>
+                        <td>ПЭН</td>
+                        <td>23</td>
+                        <td>ШТ</td>
+                        <td>6</td>
+                        <td>Краснотуринское ЛПУ МГ</td>
+                        <td>
+                            <button type="button" data-id="e1e1e1e1e1e1" name="table_add_row" class="table__button table__button_add_row">+</button>
+                            <button>Удалить</button>
+                        </td>
+                    </tr>
+
+
                     <tr class="e1e1e1e1e1e1">
                         <td>1</td>
                         <td>

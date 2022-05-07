@@ -32,6 +32,13 @@ td {
     background-color: #F4F8F9;
 }
 
+.table__fieldset {
+    display: grid;
+    /* flex-direction: row; */
+	grid-template-columns: repeat(3, 1fr);
+
+}
+
 .table__dimensions {
     display: flex;
     justify-content: center;
