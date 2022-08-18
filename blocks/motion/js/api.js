@@ -28,25 +28,24 @@ function checkingOfError (checkingValue, containerSelector, callback) {
   console.log('spanErrorOtgrugeno', spanErrorOtgrugeno);
 }
 
-const getSelectedMTR = () => {
+const getSelectedMTR = (e) => {
+  e.preventDefault();
   const selectedMTR = document.querySelectorAll('.table__checkbox-row');
-  // console.log("selectedMTR", selectedMTR);
   const array_selectedMTR = [];
   selectedMTR.forEach(item => {
     if(item.checked == true) {
-      console.log("item_id_order= ", item.dataset.id_order);
       array_selectedMTR.push(item.dataset.id_order);
     }
   })
   console.log("array_selectedMTRr= ", array_selectedMTR);
+  API(array_selectedMTR);
 }
 
-
-
-const myApi = async () => {
+const myApi = async (array_selectedMTR) => {
+  console.log("array_selectedMTR", array_selectedMTR);
   let form = document.querySelector("#user-form"); //собираем всю инфу с полей ввода.
   let data = new FormData(form);
-  data.append('test', 'Yuran');
+  data.append('array_selectedMTR', array_selectedMTR);
 
   const response = await fetch('/mtr/Main/setValueServer', {
     method: 'POST',
@@ -58,16 +57,13 @@ const myApi = async () => {
   return await response.text();
 }
 
-function API(e) {
-  e.preventDefault();
-
-  getSelectedMTR()
-  myApi()
+function API(array_selectedMTR) {
+  myApi(array_selectedMTR)
     .then((response) => {
       console.log(response);
   })
     .catch((err) => console.error(err))
 }
 
-document.getElementById('setValueApi').addEventListener('click', API);
+document.getElementById('setValueApi').addEventListener('click', getSelectedMTR);
 // document.querySelector('.API_button').addEventListener('click', ajaxApi);
