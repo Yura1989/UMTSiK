@@ -1,69 +1,226 @@
+
 table {
-    position: relative;
-    border-collapse: collapse;
-    font-size: 12px;
-    text-align: center;
+  border-collapse: collapse;
+  font-size: 12px;
+  text-align: center;
 }
 
 thead th {
-    position: sticky;
-    position: -webkit-sticky;
-    top: 0;
-    z-index: 1;
-    background-color: #E9F0F2;
+  background-color: #E9F0F2;
+  border: 1px solid #000;
+}
+
+.sticky {
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
 }
 
 th {
-    border: 1px solid #000;
-    font-size: 14px;
+  border: 1px solid #000;
+  font-size: 14px;
 }
 
 td {
-    border: 1px solid #000;
+  border-bottom: 1px solid #F0F2F5;
 }
 
 .table {
     display: table;
     width: 100%;
-    border: 1px solid #000;
 }
 
-.tbody tr:nth-child(odd){
-    background-color: #F4F8F9;
+.table__header {
+  font-style: normal;
+  font-size: 14px;
+  line-height: 140%;
+  color: #344767;
+}
+
+.table__row {
+  height: 30px;
+}
+
+.table__row-information {
+  display: none;
 }
 
 .table__fieldset {
-    display: grid;
-    /* flex-direction: row; */
-	grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  justify-content: center;
+  background: #F8F9FA;
+	box-sizing: content-box;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.25);
+	border-radius: 12px;
+	padding: 10px 0;
+  margin: 0 auto;
+  margin-left: 5px;
+  margin-right: 5px;
+	margin-bottom: 10px;
+}
 
+.table__fieldset-group {
+	width: 100%;
+  border-radius: 12px;
+}
+
+.table__fieldset-border-radius {
+  border-radius: 12px;
+}
+
+.table__fieldset-group_grid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+}
+
+.table__fieldset-add-row {
+  margin-right: auto;
+  margin-left: 100px;
+}
+
+.table__group {
+	display: flex;
+	flex-direction: column;
+	padding: 0 5px;
+}
+
+.table__fieldset_tranzit {
+	display: none;
 }
 
 .table__dimensions {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+	align-items: flex-end;
 }
 
 .table__options {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
+	  width: 100%;
     margin-bottom: 2px;
 }
 
 .table__span {
-    font-size: 10px;
-    width: 55px
+  font-size: 10px;
+}
+
+.table__span-number-row {
+  font-size: 12px;
 }
 
 .table__input {
     font-size: 12px;
+	  width: 100%;
     border: 1px solid #ddd;
+  	box-sizing: content-box;
 }
 
 .table__text {
     font-size: 10px;
     margin: 0;
     padding: 0;
+}
+
+.table__buttons {
+  display: flex;
+  flex-direction: column;
+	text-align: left;
+}
+
+.table__button {
+  display: block;
+  background: transparent;
+  border-radius: 8px;
+  width: 200px;
+  cursor: pointer;
+  margin-right: auto;
+  margin-left: 5px;
+  margin-bottom: 5px;
+}
+
+.table__button_row {
+  border-radius: 8px;
+  width: 120px;
+  cursor: pointer;
+  margin-right: auto;
+  margin-left: 5px;
+  margin-bottom: 5px;
+}
+
+.table__button-check-all {
+  border-radius: 8px;
+  /* width: 120px; */
+  cursor: pointer;
+  margin-right: auto;
+  background: transparent;
+  /* margin-left: 5px; */
+  /* margin-bottom: 5px; */
+}
+
+.table__button_row:hover {
+  color: #1b8220;
+  border: 1px solid #1b8220;
+}
+
+.table__button_save {
+  color: #1b8220;
+  border: 1px solid #1b8220;
+}
+
+.table__button_save:hover {
+  border: 1px solid #63B967;
+  color: #63B967;
+}
+
+.table__button_add {
+  color: #1A73E7;
+  border: 1px solid #1A73E7;
+}
+
+.table__button_add:hover {
+  border: 1px solid #073672;
+  color: #073672;
+}
+
+.table__button:active {
+  /* opacity: .8; */
+}
+
+.table__button-edit {
+  background: url(../../images/pencil.svg) no-repeat;
+  cursor: pointer;
+}
+
+.table__button-del {
+  background: url(../../images/delete.svg) no-repeat;
+  cursor: pointer;
+}
+
+.row__checked {
+  border-collapse: collapse;
+  font-size: 12px;
+  text-align: center;
+}
+
+.information {
+  /* width: 100%; */
+  margin: 0 auto;
+  margin-left: 5px;
+  margin-right: 5px;
+  padding: 0;
+  background: #fff;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+}
+
+.information__title {
+  font-size: 14px;
+  line-height: 240%;
+  font-weight: 400;
+  font-style: normal;
+  color: #7B809A;
+  text-align: center;
 }

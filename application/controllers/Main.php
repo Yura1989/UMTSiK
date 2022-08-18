@@ -167,7 +167,7 @@ class Main extends CI_Controller
                 $username = $this->input->post('username');
                 $password = password_hash($this->input->post('password'), PASSWORD_DEFAULT);
                 $date_create = date('Y-m-d');
-                $query = sprintf("INSERT INTO users (sername, name, patronymic, email, position, department, n_sklad, n_filial, username, password, date_create) 
+                $query = sprintf("INSERT INTO users (sername, name, patronymic, email, position, department, n_sklad, n_filial, username, password, date_create)
 								VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');",
                     trim($sername), trim($name), trim($patronymic), trim($email), trim($position), trim($department), trim($name_sklad), trim($filial), trim($username), trim($password), trim($date_create));
                 $this->load->model('Model_db');
@@ -255,7 +255,7 @@ class Main extends CI_Controller
                     } else $admin = 0;
                 }
 
-                $query_action = sprintf("INSERT INTO actions (id_bond_users, edit_order, show_order, show_all_orders, delete_order, print_orders, edit_motion, show_motion, show_all_motions,delete_motion, edit_datas, admin) 
+                $query_action = sprintf("INSERT INTO actions (id_bond_users, edit_order, show_order, show_all_orders, delete_order, print_orders, edit_motion, show_motion, show_all_motions,delete_motion, edit_datas, admin)
 								VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
                     trim($id_user_action[0]['id_user']), trim($edit_order), trim($show_order), trim($show_all_orders), trim($delete_order), trim($edit_motion), trim($show_motion), trim($show_all_motions), trim($delete_motion), trim($print_orders), trim($edit_datas), trim($admin));
                 $this->load->model('Model_db');
@@ -411,38 +411,38 @@ class Main extends CI_Controller
                         } else $admin = 0;
                     }
 
-                    $query = sprintf("UPDATE users 
-										SET 
-										sername = ('%s'), 
-										name = ('%s'), 
-										patronymic = ('%s'), 
-										email = ('%s'), 
-										position = ('%s'), 
+                    $query = sprintf("UPDATE users
+										SET
+										sername = ('%s'),
+										name = ('%s'),
+										patronymic = ('%s'),
+										email = ('%s'),
+										position = ('%s'),
 										department = ('%s'),
 										n_sklad = ('%s'),
 										n_filial = ('%s'),
-										username = ('%s'), 
-										password = ('%s'), 
-										date_create = ('%s') 
+										username = ('%s'),
+										password = ('%s'),
+										date_create = ('%s')
 									WHERE id_user = '%s';",
                         trim($sername), trim($name), trim($patronymic), trim($email), trim($position), trim($department), trim($name_sklad), trim($filial), trim($username), trim($newpassword), trim($date_create), trim($ids));
                     $this->load->model('Model_db');
                     $this->Model_db->createUser($query);
 
-                    $query_actions = sprintf("UPDATE actions 
-										SET 
-										edit_order = ('%s'), 
-										show_order = ('%s'), 
-										show_all_orders = ('%s'), 
-										delete_order = ('%s'), 
-										edit_motion = ('%s'), 
-										show_motion = ('%s'), 
-										show_all_motions = ('%s'), 
+                    $query_actions = sprintf("UPDATE actions
+										SET
+										edit_order = ('%s'),
+										show_order = ('%s'),
+										show_all_orders = ('%s'),
+										delete_order = ('%s'),
+										edit_motion = ('%s'),
+										show_motion = ('%s'),
+										show_all_motions = ('%s'),
 										delete_motion = ('%s'),
 										print_orders = ('%s'),
 										return_edit_orders = ('%s'),
 										filial_edit_motion = ('%s'),
-										edit_datas = ('%s'), 
+										edit_datas = ('%s'),
 										admin = ('%s')
 									WHERE id_bond_users = '%s';",
                         trim($edit_order), trim($show_order), trim($show_all_orders), trim($delete_order), trim($edit_motion), trim($show_motion), trim($show_all_motions), trim($delete_motion), trim($print_orders), trim($return_edit_orders), trim($filial_edit_motion), trim($edit_datas), trim($admin), trim($ids));
@@ -544,37 +544,37 @@ class Main extends CI_Controller
                     } else $admin = 0;
                 }
 
-                $query = sprintf("UPDATE users 
-										SET 
-										sername = ('%s'), 
-										name = ('%s'), 
-										patronymic = ('%s'), 
-										email = ('%s'), 
-										position = ('%s'), 
+                $query = sprintf("UPDATE users
+										SET
+										sername = ('%s'),
+										name = ('%s'),
+										patronymic = ('%s'),
+										email = ('%s'),
+										position = ('%s'),
 										department = ('%s'),
 										n_sklad = ('%s'),
 										n_filial = ('%s'),
-										username = ('%s'), 
-										date_create = ('%s') 
+										username = ('%s'),
+										date_create = ('%s')
 									WHERE id_user = '%s';",
                     trim($sername), trim($name), trim($patronymic), trim($email), trim($position), trim($department), trim($name_sklad), trim($filial), trim($username), trim($date_create), trim($ids));
                 $this->load->model('Model_db');
                 $this->Model_db->createUser($query);
 
-                $query_actions = sprintf("UPDATE actions 
-										SET 
-										edit_order = ('%s'), 
-										show_order = ('%s'), 
-										show_all_orders = ('%s'), 
-										delete_order = ('%s'), 
-										edit_motion = ('%s'), 
-										show_motion = ('%s'), 
-										show_all_motions = ('%s'), 
+                $query_actions = sprintf("UPDATE actions
+										SET
+										edit_order = ('%s'),
+										show_order = ('%s'),
+										show_all_orders = ('%s'),
+										delete_order = ('%s'),
+										edit_motion = ('%s'),
+										show_motion = ('%s'),
+										show_all_motions = ('%s'),
 										delete_motion = ('%s'),
 										print_orders = ('%s'),
 										return_edit_orders = ('%s'),
 										filial_edit_motion = ('%s'),
-										edit_datas = ('%s'), 
+										edit_datas = ('%s'),
 										admin = ('%s')
 									WHERE id_bond_users = '%s';",
                     trim($edit_order), trim($show_order), trim($show_all_orders), trim($delete_order), trim($edit_motion), trim($show_motion), trim($show_all_motions), trim($delete_motion), trim($print_orders), trim($return_edit_orders), trim($filial_edit_motion), trim($edit_datas), trim($admin), trim($ids));
@@ -931,8 +931,8 @@ class Main extends CI_Controller
         $query_name_department = sprintf("SELECT department FROM users WHERE username ='%s';", trim($order['author_order_id']));
         $this->load->model('Model_db');
         $result['name_department'] = $this->Model_db->select_id_all_order($query_name_department);
-        $query_all_orders = sprintf("INSERT INTO all_orders (number_order, 
-															 date_order, 
+        $query_all_orders = sprintf("INSERT INTO all_orders (number_order,
+															 date_order,
 															 address_order,
 															 name_sklad,
 															 author_order,
@@ -1057,18 +1057,18 @@ class Main extends CI_Controller
 			                   '" . $order['codeMTR'][$i] . "',
 			                   '" . $order['numberPartMTR'][$i] . "',
 			                   '" . $order['nameMTR'][$i] . "',
-			                   '" . $order['ukObjectMTR'][$i] . "', 
-			                   '" . $order['numberObjectMTR'][$i] . "', 
-			                   '" . $order['sizeMTR'][$i] . "', 
+			                   '" . $order['ukObjectMTR'][$i] . "',
+			                   '" . $order['numberObjectMTR'][$i] . "',
+			                   '" . $order['sizeMTR'][$i] . "',
 			                   '" . $order['sumMTR'][$i] . "',
-							   '" . $order['filialMTR'][$i] . "', 
-							   '" . $order['deliveryMTR'][$i] . "', 
-							   '" . $order['noteMTR'][$i] . "', 
-							   '" . $order['number_orderMTR'] . "', 
-							   '" . $order['date_orderMTR'] . "', 
-							   '" . $order['address_orderMTR'] . "', 
-							   '" . $order['name_skladMTR'] . "', 
-							   '" . $order['author_order'] . "', 
+							   '" . $order['filialMTR'][$i] . "',
+							   '" . $order['deliveryMTR'][$i] . "',
+							   '" . $order['noteMTR'][$i] . "',
+							   '" . $order['number_orderMTR'] . "',
+							   '" . $order['date_orderMTR'] . "',
+							   '" . $order['address_orderMTR'] . "',
+							   '" . $order['name_skladMTR'] . "',
+							   '" . $order['author_order'] . "',
 							   '" . $order['datetime'] . "')";
         }
 
@@ -1111,9 +1111,9 @@ class Main extends CI_Controller
         $this->load->model('Model_db');
         $result_search = $this->Model_db->select_id_all_order($query_search);
         if (count($result_search) > 0) {
-            $query = sprintf("UPDATE order_mtr SET codeMTR='%s', numberPart='%s', nameMTR='%s', ukObjectMTR='%s', numberObjectMTR='%s', 
-													sizeMTR='%s', sumMTR='%s', filialMTR='%s', deliveryMTR='%s', noteMTR='%s', 
-													number_orderMTR='%s', date_orderMTR='%s', address_orderMTR='%s', 
+            $query = sprintf("UPDATE order_mtr SET codeMTR='%s', numberPart='%s', nameMTR='%s', ukObjectMTR='%s', numberObjectMTR='%s',
+													sizeMTR='%s', sumMTR='%s', filialMTR='%s', deliveryMTR='%s', noteMTR='%s',
+													number_orderMTR='%s', date_orderMTR='%s', address_orderMTR='%s',
 													name_skladMTR='%s', author_Order='%s' ,create_date_order='%s'
 												WHERE id_order='%s' AND id_bond_all_orders='%s';",
                 trim($order['codeMTR']), trim($order['numberPartMTR']), trim($order['nameMTR']), trim($order['ukObjectMTR']), trim($order['numberObjectMTR']),
@@ -1245,8 +1245,8 @@ class Main extends CI_Controller
             $this->load->model('Model_db');
             $result['name_sklad'] = $this->Model_db->select_id_all_order($query_sklad);
 
-            $query_motion = sprintf("SELECT id_all_motion, number_motion, author_motion, date_create_motion, flag_motion, sername, name, patronymic 
-										FROM all_motion m 
+            $query_motion = sprintf("SELECT id_all_motion, number_motion, author_motion, date_create_motion, flag_motion, sername, name, patronymic
+										FROM all_motion m
 										JOIN users u ON m.author_motion=u.username ORDER BY date_create_motion DESC LIMIT 100;");
             $result['all_motion'] = $this->Model_db->select_id_all_order($query_motion);
             $n = count($result['all_motion']);
@@ -1289,16 +1289,16 @@ class Main extends CI_Controller
                 }
 
 //Формирование запроса в зависимости от фильтров
-                $query = "SELECT id_all_motion, number_motion, author_motion, date_create_motion, flag_motion, sername, name, patronymic 
-							FROM all_motion m 
-							JOIN users u ON m.author_motion=u.username 
+                $query = "SELECT id_all_motion, number_motion, author_motion, date_create_motion, flag_motion, sername, name, patronymic
+							FROM all_motion m
+							JOIN users u ON m.author_motion=u.username
 							JOIN all_orders o ON m.number_motion=o.bond_guid_motion";
                 if (!empty($filter)) {
                     $query .= ' WHERE ' . implode(' AND ', $filter) . 'ORDER BY date_create_motion DESC;';
                 } else {
-                    $query = "SELECT id_all_motion, number_motion, author_motion, date_create_motion, flag_motion, sername, name, patronymic 
-							FROM all_motion m 
-							JOIN users u ON m.author_motion=u.username 
+                    $query = "SELECT id_all_motion, number_motion, author_motion, date_create_motion, flag_motion, sername, name, patronymic
+							FROM all_motion m
+							JOIN users u ON m.author_motion=u.username
 							JOIN all_orders o ON m.number_motion=o.bond_guid_motion ORDER BY date_create_motion DESC";
                 }
 
@@ -1339,34 +1339,34 @@ class Main extends CI_Controller
             $result['area'] = $this->Model_db->select_id_all_order($query_area);
 
             if ($_filial == 6) {
-                $query_motion = sprintf("SELECT id_all_motion, 
-											id_all_orders, 
-											address_order, 
-											number_motion, 
-											author_motion, 
-											date_create_motion, 
-											flag_motion, 
-											sername, 
-											name, 
-											patronymic 
-											FROM all_motion m 
-											JOIN users u ON m.author_motion=u.username 
-											JOIN all_orders o ON m.number_motion=o.bond_guid_motion 
+                $query_motion = sprintf("SELECT id_all_motion,
+											id_all_orders,
+											address_order,
+											number_motion,
+											author_motion,
+											date_create_motion,
+											flag_motion,
+											sername,
+											name,
+											patronymic
+											FROM all_motion m
+											JOIN users u ON m.author_motion=u.username
+											JOIN all_orders o ON m.number_motion=o.bond_guid_motion
 											WHERE flag_motion='10' OR flag_motion='20' OR flag_motion='30' ORDER BY date_create_motion DESC LIMIT 100;");
             } else {
-                $query_motion = sprintf("SELECT id_all_motion, 
-											id_all_orders, 
-											address_order, 
-											number_motion, 
-											author_motion, 
-											date_create_motion, 
-											flag_motion, 
-											sername, 
-											name, 
-											patronymic 
-											FROM all_motion m 
-											JOIN users u ON m.author_motion=u.username 
-											JOIN all_orders o ON m.number_motion=o.bond_guid_motion 
+                $query_motion = sprintf("SELECT id_all_motion,
+											id_all_orders,
+											address_order,
+											number_motion,
+											author_motion,
+											date_create_motion,
+											flag_motion,
+											sername,
+											name,
+											patronymic
+											FROM all_motion m
+											JOIN users u ON m.author_motion=u.username
+											JOIN all_orders o ON m.number_motion=o.bond_guid_motion
 											WHERE (flag_motion='10' OR flag_motion='20' OR flag_motion='30') AND address_order = '%s' ORDER BY date_create_motion DESC;", trim($result['filial'][0]['name_filial']));
             }
             $result['all_motion'] = $this->Model_db->select_id_all_order($query_motion);
@@ -1432,6 +1432,7 @@ class Main extends CI_Controller
     {
         $_username = $this->session->userdata('username');
         $_actions = $this->session->userdata('actions');
+
         if (isset ($_username) && ((($_actions['edit_motion']) == 1)) || (($_actions['show_motion']) == 1)) {
             if (isset($_POST['id_all_orders_check'])) {
                 $string_check = implode(",", $_POST['id_all_orders_check']);
@@ -1602,40 +1603,40 @@ class Main extends CI_Controller
 		 					'" . $order['guid_bond_guid_motion_date'] . "',
 			                '" . $order['length_motion'] . "',
 			                '" . $order['width_motion'] . "',
-			                '" . $order['height_motion'] . "', 
-			                '" . $order['weight_motion'] . "', 
+			                '" . $order['height_motion'] . "',
+			                '" . $order['weight_motion'] . "',
 			                '" . $order['total_motion'] . "',
-						    '" . $order['cargo_motion'] . "', 
-							'" . $order['dateRequest_motion'] . "', 
-							'" . $order['dateShipments_motion'] . "', 
-							'" . $order['infoShipments_motion'] . "', 
-							'" . $order['sumMTR'] . "', 
-							'" . $order['tranzit_motion'] . "', 
-							'" . $order['shipped_motion'] . "', 
-							'" . $order['remains_motion'] . "', 
-							'" . $order['numberOverhead_motion'] . "', 
-							'" . $order['dateOverhead_motion'] . "', 
-							'" . $order['author_motion'] . "', 
+						    '" . $order['cargo_motion'] . "',
+							'" . $order['dateRequest_motion'] . "',
+							'" . $order['dateShipments_motion'] . "',
+							'" . $order['infoShipments_motion'] . "',
+							'" . $order['sumMTR'] . "',
+							'" . $order['tranzit_motion'] . "',
+							'" . $order['shipped_motion'] . "',
+							'" . $order['remains_motion'] . "',
+							'" . $order['numberOverhead_motion'] . "',
+							'" . $order['dateOverhead_motion'] . "',
+							'" . $order['author_motion'] . "',
 							'" . $order['datetime_motion'] . "',
 							'" . $order['note_motion'] . "',
 							'" . $order['reference'] . "' )";
-            $query_1 = "INSERT INTO motion (	id_bond_order_mtr, 
-										id_bond_all_motion, 
+            $query_1 = "INSERT INTO motion (	id_bond_order_mtr,
+										id_bond_all_motion,
 										guid_motion,
 										bond_guid_motion_date,
-										length_motion, 
-										width_motion, 
-										height_motion, 
-										weight_motion, 
-										total_motion, 
-										cargo_motion, 
-										dateRequest_motion, 
-										dateShipments_motion, 
-										infoShipments_motion, 
+										length_motion,
+										width_motion,
+										height_motion,
+										weight_motion,
+										total_motion,
+										cargo_motion,
+										dateRequest_motion,
+										dateShipments_motion,
+										infoShipments_motion,
 										all_mtr,
                                         tranzit_motion,
-										shipped_motion, 
-										remains_motion, 
+										shipped_motion,
+										remains_motion,
 										numberOverhead_motion,
 										dateOverhead_motion,
 										author_motion,
@@ -1654,40 +1655,40 @@ class Main extends CI_Controller
 		 					'" . $order['guid_bond_guid_motion_date'] . "',
 			                '" . $order['length_motion'] . "',
 			                '" . $order['width_motion'] . "',
-			                '" . $order['height_motion'] . "', 
-			                '" . $order['weight_motion'] . "', 
+			                '" . $order['height_motion'] . "',
+			                '" . $order['weight_motion'] . "',
 			                '" . $order['total_motion'] . "',
-						    '" . $order['cargo_motion'] . "', 
-							'" . $order['dateRequest_motion'] . "', 
-							'" . $order['dateShipments_motion'] . "', 
-							'" . $order['infoShipments_motion'] . "', 
-							'" . $order['sumMTR'] . "', 
-							'" . $order['tranzit_motion'] . "', 
-							'" . $order['shipped_motion'] . "', 
-							'" . $order['remains_motion'] . "', 
-							'" . $order['numberOverhead_motion'] . "', 
-							'" . $order['dateOverhead_motion'] . "', 
-							'" . $order['author_motion'] . "', 
+						    '" . $order['cargo_motion'] . "',
+							'" . $order['dateRequest_motion'] . "',
+							'" . $order['dateShipments_motion'] . "',
+							'" . $order['infoShipments_motion'] . "',
+							'" . $order['sumMTR'] . "',
+							'" . $order['tranzit_motion'] . "',
+							'" . $order['shipped_motion'] . "',
+							'" . $order['remains_motion'] . "',
+							'" . $order['numberOverhead_motion'] . "',
+							'" . $order['dateOverhead_motion'] . "',
+							'" . $order['author_motion'] . "',
 							'" . $order['datetime_motion'] . "',
 							'" . $order['note_motion'] . "',
 							'" . $order['reference'] . "' )";
-            $query_1 = "INSERT INTO motion (	id_bond_order_mtr, 
-										id_bond_all_motion, 
+            $query_1 = "INSERT INTO motion (	id_bond_order_mtr,
+										id_bond_all_motion,
 										guid_motion,
 										bond_guid_motion_date,
-										length_motion, 
-										width_motion, 
-										height_motion, 
-										weight_motion, 
-										total_motion, 
-										cargo_motion, 
-										dateRequest_motion, 
-										dateShipments_motion, 
-										infoShipments_motion, 
+										length_motion,
+										width_motion,
+										height_motion,
+										weight_motion,
+										total_motion,
+										cargo_motion,
+										dateRequest_motion,
+										dateShipments_motion,
+										infoShipments_motion,
 										all_mtr,
                                         tranzit_motion,
-										shipped_motion, 
-										remains_motion, 
+										shipped_motion,
+										remains_motion,
 										numberOverhead_motion,
 										dateOverhead_motion,
 										author_motion,
@@ -1742,42 +1743,42 @@ class Main extends CI_Controller
 		 					'" . $order['guid_bond_guid_motion_date'] . "',
 			                '" . $order['length_motion'] . "',
 			                '" . $order['width_motion'] . "',
-			                '" . $order['height_motion'] . "', 
-			                '" . $order['weight_motion'] . "', 
+			                '" . $order['height_motion'] . "',
+			                '" . $order['weight_motion'] . "',
 			                '" . $order['total_motion'] . "',
-						    '" . $order['cargo_motion'] . "', 
-							'" . $order['dateRequest_motion'] . "', 
-							'" . $order['dateShipments_motion'] . "', 
-							'" . $order['infoShipments_motion'] . "', 
-							'" . $order['sumMTR'] . "', 
+						    '" . $order['cargo_motion'] . "',
+							'" . $order['dateRequest_motion'] . "',
+							'" . $order['dateShipments_motion'] . "',
+							'" . $order['infoShipments_motion'] . "',
+							'" . $order['sumMTR'] . "',
 							'" . $order['tranzit_motion'] . "',
-							'" . $order['shipped_motion'] . "', 
-							'" . $order['remains_motion'] . "', 
-							'" . $order['numberOverhead_motion'] . "', 
-							'" . $order['dateOverhead_motion'] . "', 
-							'" . $order['author_motion'] . "', 
+							'" . $order['shipped_motion'] . "',
+							'" . $order['remains_motion'] . "',
+							'" . $order['numberOverhead_motion'] . "',
+							'" . $order['dateOverhead_motion'] . "',
+							'" . $order['author_motion'] . "',
 							'" . $order['datetime_motion'] . "',
 							'" . $order['note_motion'] . "',
 							'" . $order['reference'] . "' )";
             $n++;
         }
-        $query_add_motion = "INSERT INTO motion (	id_bond_order_mtr, 
-										id_bond_all_motion, 
+        $query_add_motion = "INSERT INTO motion (	id_bond_order_mtr,
+										id_bond_all_motion,
 										guid_motion,
 										bond_guid_motion_date,
-										length_motion, 
-										width_motion, 
-										height_motion, 
-										weight_motion, 
-										total_motion, 
-										cargo_motion, 
-										dateRequest_motion, 
-										dateShipments_motion, 
-										infoShipments_motion, 
+										length_motion,
+										width_motion,
+										height_motion,
+										weight_motion,
+										total_motion,
+										cargo_motion,
+										dateRequest_motion,
+										dateShipments_motion,
+										infoShipments_motion,
 										all_mtr,
-                                        tranzit_motion, 
-										shipped_motion, 
-										remains_motion, 
+                                        tranzit_motion,
+										shipped_motion,
+										remains_motion,
 										numberOverhead_motion,
 										dateOverhead_motion,
 										author_motion,
@@ -1826,20 +1827,20 @@ class Main extends CI_Controller
         if (($order['number_id_motion'] != NULL)) {
             /*Формируем запрос к базе и обновляем данные*/
             print_r("Обновление строки");
-            $query_update = sprintf("UPDATE motion SET 
+            $query_update = sprintf("UPDATE motion SET
 										bond_guid_motion_date = '%s',
-										length_motion = '%s', 
-										width_motion = '%s', 
-										height_motion = '%s', 
-										weight_motion = '%s', 
-										total_motion = '%s', 
-										cargo_motion = '%s', 
-										dateRequest_motion = '%s', 
-										dateShipments_motion = '%s', 
-										infoShipments_motion = '%s', 
-										all_mtr = '%s', 
-                                        tranzit_motion = '%s', 
-										shipped_motion = '%s', 
+										length_motion = '%s',
+										width_motion = '%s',
+										height_motion = '%s',
+										weight_motion = '%s',
+										total_motion = '%s',
+										cargo_motion = '%s',
+										dateRequest_motion = '%s',
+										dateShipments_motion = '%s',
+										infoShipments_motion = '%s',
+										all_mtr = '%s',
+                                        tranzit_motion = '%s',
+										shipped_motion = '%s',
 										remains_motion = '%s',
 										numberOverhead_motion = '%s',
 										dateOverhead_motion = '%s',
@@ -1946,6 +1947,15 @@ class Main extends CI_Controller
         $query_id_all_motion = sprintf("SELECT id_all_motion FROM all_motion WHERE number_motion='%s';", trim($order['guid']));
         $result_id_all_motion = $this->Model_db->select_id_all_order($query_id_all_motion);
         print_r($result_id_all_motion[0]['id_all_motion']);
+    }
+
+    function setValueServer()
+    {
+      var_dump($_POST);
+      $order['length_motion'] = $this->input->post('length_motion');
+
+      $order['author_motion'] = $this->session->userdata('username');
+      $order['date_create_motion'] = date("Y-m-d H:i:s");
     }
 
     /*AJAX изменение статуса распорядения "В работе" в таблице all_orders*/
@@ -2128,8 +2138,8 @@ class Main extends CI_Controller
         $order['datetime_motion'] = date("Y-m-d H:i:s");
 
         /*Формируем запрос к базе и заносим данные*/
-        $query = sprintf("UPDATE motion SET 
-										dateArrival_motion = '%s', 
+        $query = sprintf("UPDATE motion SET
+										dateArrival_motion = '%s',
 										numberM15_motion = '%s',
 										dateM15_motion = '%s',
 										dateFilial_motion = '%s',
@@ -3481,7 +3491,7 @@ class Main extends CI_Controller
             if (isset($_POST['button_create_sklad'])) {
                 $sklad = $this->input->post('name_sklad');
                 $date_create_sklad = date('Y-m-d');
-                $query = sprintf("INSERT INTO sklads (name_sklad, date_create_sklad) 
+                $query = sprintf("INSERT INTO sklads (name_sklad, date_create_sklad)
 								VALUES ('%s', '%s');", trim($sklad), trim($date_create_sklad));
                 $this->load->model('Model_db');
                 $this->Model_db->create_edit_delete($query);
@@ -3539,7 +3549,7 @@ class Main extends CI_Controller
             if (isset($_POST['button_create_object'])) {
                 $object = $this->input->post('name_object');
                 $date_create_object = date('Y-m-d');
-                $query = sprintf("INSERT INTO objects (name_object, date_create_object) 
+                $query = sprintf("INSERT INTO objects (name_object, date_create_object)
 								VALUES ('%s', '%s');", trim($object), trim($date_create_object));
                 $this->load->model('Model_db');
                 $this->Model_db->create_edit_delete($query);
@@ -3597,7 +3607,7 @@ class Main extends CI_Controller
             if (isset($_POST['button_create_filial'])) {
                 $filial = $this->input->post('name_filial');
                 $date_create_filial = date('Y-m-d');
-                $query = sprintf("INSERT INTO filials (name_filial, date_create_filial) 
+                $query = sprintf("INSERT INTO filials (name_filial, date_create_filial)
 								VALUES ('%s', '%s');", trim($filial), trim($date_create_filial));
                 $this->load->model('Model_db');
                 $this->Model_db->create_edit_delete($query);
@@ -3654,7 +3664,7 @@ class Main extends CI_Controller
             if (isset($_POST['button_create_delivery_mode'])) {
                 $delivery_mode = $this->input->post('name_delivery_mode');
                 $date_create_delivery_mode = date('Y-m-d');
-                $query = sprintf("INSERT INTO delivery_modes (name_delivery_mode, date_create_delivery_mode) 
+                $query = sprintf("INSERT INTO delivery_modes (name_delivery_mode, date_create_delivery_mode)
 								VALUES ('%s', '%s');", trim($delivery_mode), trim($date_create_delivery_mode));
                 $this->load->model('Model_db');
                 $this->Model_db->create_edit_delete($query);
@@ -3711,7 +3721,7 @@ class Main extends CI_Controller
             if (isset($_POST['button_create_measure'])) {
                 $measure = $this->input->post('name_measure');
                 $date_create_measure = date('Y-m-d');
-                $query = sprintf("INSERT INTO measures (name_measure, date_create_measure) 
+                $query = sprintf("INSERT INTO measures (name_measure, date_create_measure)
 								VALUES ('%s', '%s');", trim($measure), trim($date_create_measure));
                 $this->load->model('Model_db');
                 $this->Model_db->create_edit_delete($query);
@@ -3783,7 +3793,7 @@ class Main extends CI_Controller
                 $department = $this->input->post('name_department');
                 $number_department = $this->input->post('number_department');
                 $date_create_department = date('Y-m-d');
-                $query = sprintf("INSERT INTO departments (name_department, number_department, date_create_department) 
+                $query = sprintf("INSERT INTO departments (name_department, number_department, date_create_department)
 								VALUES ('%s', '%s', '%s');", trim($department), trim($number_department), trim($date_create_department));
                 $this->load->model('Model_db');
                 $this->Model_db->create_edit_delete($query);
@@ -3842,7 +3852,7 @@ class Main extends CI_Controller
                 $locations = $this->input->post('locations');
                 $lpu = $this->input->post('name_lpu');
                 $date_create_lpu = date('Y-m-d');
-                $query = sprintf("INSERT INTO lpu (id_bond_filials, name_lpu, date_create_lpu) 
+                $query = sprintf("INSERT INTO lpu (id_bond_filials, name_lpu, date_create_lpu)
 								VALUES ('%s', '%s', '%s');", trim($locations), trim($lpu), trim($date_create_lpu));
                 $this->Model_db->create_edit_delete($query);
                 header("Location: lpu");
