@@ -1776,7 +1776,7 @@ class Main extends CI_Controller
 										dateShipments_motion,
 										infoShipments_motion,
 										all_mtr,
-                                        tranzit_motion,
+                    tranzit_motion,
 										shipped_motion,
 										remains_motion,
 										numberOverhead_motion,
@@ -1839,7 +1839,7 @@ class Main extends CI_Controller
 										dateShipments_motion = '%s',
 										infoShipments_motion = '%s',
 										all_mtr = '%s',
-                                        tranzit_motion = '%s',
+                    tranzit_motion = '%s',
 										shipped_motion = '%s',
 										remains_motion = '%s',
 										numberOverhead_motion = '%s',
@@ -1949,13 +1949,38 @@ class Main extends CI_Controller
         print_r($result_id_all_motion[0]['id_all_motion']);
     }
 
-    function setValueServer()
+    function setValueServerMotion()
     {
       var_dump($_POST);
-      $order['length_motion'] = $this->input->post('length_motion');
+      /*Получаем ID MTR по которому добавляется информация*/
+      $order['number_id_order_mtr'] = $this->input->post('number_id_order_mtr');//id из таблицы order_mtr
+      $order['id_bond_all_motion'] = $this->input->post('id_bond_all_motion');//id с таблицы all_motion (id всего отчета)
+      //Получаем GUID для информации о движении МТР
+      $order['guid'] = $this->input->post('guid');//GUID всего отчета "информация о движении МТР"
+      //Получаем GUID для строки по информации о движении МТР
+      $order['guid_bond_guid_motion_date'] = $this->input->post('guid_bond_guid_motion_date');
 
+      $order['length_motion'] = $this->input->post('length_motion');
+      $order['width_motion'] = $this->input->post('width_motion');
+      $order['height_motion'] = $this->input->post('height_motion');
+      $order['weight_motion'] = $this->input->post('weight_motion');
+      $order['dateRequest_motion'] = $this->input->post('dateRequest_motion');
+      $order['infoShipments_motion'] = $this->input->post('infoShipments_motion');
+      $order['dateShipments_motion'] = $this->input->post('dateShipments_motion');
+      $order['cargo_motion'] = $this->input->post('cargo_motion');
+      $order['height_motion'] = $this->input->post('height_motion');
+      $order['shipped_motion'] = $this->input->post('shipped_motion');
+      $order['tranzit_motion'] = $this->input->post('tranzit_motion');
+      $order['dateOverhead_motion'] = $this->input->post('dateOverhead_motion');
+      $order['numberOverhead_motion'] = $this->input->post('numberOverhead_motion');
+      $order['note_motion'] = $this->input->post('note_motion');
+      $order['general_notes_motion'] = $this->input->post('general_notes_motion');
       $order['author_motion'] = $this->session->userdata('username');
       $order['date_create_motion'] = date("Y-m-d H:i:s");
+      $order['array_selectedMTR'] = $this->input->post('array_selectedMTR');
+
+      var_dump("order", $order);
+      $this->load->model('Model_db');
     }
 
     /*AJAX изменение статуса распорядения "В работе" в таблице all_orders*/

@@ -1,5 +1,3 @@
-// import $ from '../../../assets/order/jquery-3.3.1';
-
 function consoleTest(e) {
   e.preventDefault();
   console.log("API");
@@ -37,17 +35,17 @@ const getSelectedMTR = (e) => {
       array_selectedMTR.push(item.dataset.id_order);
     }
   })
-  console.log("array_selectedMTRr= ", array_selectedMTR);
+  // console.log("array_selectedMTRr= ", array_selectedMTR);
   API(array_selectedMTR);
 }
 
 const myApi = async (array_selectedMTR) => {
-  console.log("array_selectedMTR", array_selectedMTR);
+  // console.log("array_selectedMTR", array_selectedMTR);
   let form = document.querySelector("#user-form"); //собираем всю инфу с полей ввода.
   let data = new FormData(form);
   data.append('array_selectedMTR', array_selectedMTR);
 
-  const response = await fetch('/mtr/Main/setValueServer', {
+  const response = await fetch('/mtr/Main/setValueServerMotion', {
     method: 'POST',
     body: data
   });
@@ -65,5 +63,6 @@ function API(array_selectedMTR) {
     .catch((err) => console.error(err))
 }
 
+//сбор данных для отправки на сервер
 document.getElementById('setValueApi').addEventListener('click', getSelectedMTR);
-// document.querySelector('.API_button').addEventListener('click', ajaxApi);
+

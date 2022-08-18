@@ -89,7 +89,11 @@
     </table>
   </section>
 
-  <form method="POST" id="user-form">
+  <form method="POST" id="user-form"
+  data-id_order_mtr="<?php if (isset($item['id_order'])) echo($item['id_order']); ?>"
+  data-id_motion="<?php if (isset($orders_guid)) echo $orders_guid; ?>"
+  data-bond_guid_motion_date="<?php echo($bond_guid_motion_date); ?>"
+  >
   <div class="row__checked">
     <fieldset class="table__fieldset">
       <legend class="table__fieldset-add-row">Информация по МТР</legend>
@@ -180,8 +184,6 @@
     </form>
     <button type="button" data-id="api_button" name="api" class="table__button API_button">Сделать запрос API</button>
   </div>
-
-
 
   <footer>
         <?php print_r($_SESSION); ?>
